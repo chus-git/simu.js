@@ -1,33 +1,50 @@
 import logo from './logo.svg';
 import './App.css';
 import Vify from './vify/vify';
-import React, { useState } from 'react';
-import KinematicsModule from './vify/modules/Kinematics/KinematicsModule';
-import KinematicsObject from './vify/modules/Kinematics/KinematicsObject';
-import Engine from './vify/Engine';
+import SpecialRelativityObject from './vify/Modules/SpecialRelativity/SpecialRelativityObject';
+import KinematicsObject from './vify/Modules/Kinematics/KinematicsObject';
+import React, { useRef, useEffect, useState } from 'react';
 
 function App() {
 
-  React.useEffect(() => {
+  // Vify simulation
+  const [simulation, setSimulation] = useState(
+    Vify.SpecialRelativitySimulation({
+      duration: 20,
+      playbackSpeed: 1
+    })
+  );
 
-    const vify = new Vify({
-      renderElement: document.getElementById('vify'),
-      engine: new Engine(
-        new KinematicsModule()
-      )
-    });
+  // Simulation time
+  const [simulationTime, setSimulationTime] = useState(simulation.time);
 
-    let object = new KinematicsObject();
-    vify.engine.simulation.scene.addObject(object)
-    vify.engine.simulation.toggleLooping();
-    vify.engine.simulation.playbackSpeed = 0.2;
-    vify.engine.simulation.resume();
+  // Simulation state
+  const [simualtionState, setSimulationState] = useState(simulation.state);
+
+  useEffect(() => {
+
+    const handleUpdateSimulation = (updatedSimulation) => {
+      setSimulationTime(simulation.time);
+      setSimulationState(updatedSimulation.state);
+    };
+
+    // Suscríbete al evento de actualización de la simulación
+    simulation.updateEventEmmitter.subscribe(handleUpdateSimulation);
+
+    return () => {
+      simulation.updateEventEmmitter.unsubscribe(handleUpdateSimulation);
+    };
 
   }, []);
 
   return (
-    <div className="App" style={{display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100vh'}}>
-      <div id="vify" style={{width: '1000px', height: '500px'}}></div>
+    <div className="App">
+      <div id="vify" style={{ maxWidth: '1000px', height: '500px' }}>
+        <p>Tiempo de la simulación: {Math.round(simulation.time * 100) / 100} Estado: {simulation.state} </p>
+        <p>Tiempo del objeto: {simulation.scene.objects[0].properTime} Estado: {simulation.state} </p>
+        <button onClick={() => simulation.pause()}>Pause</button>
+        <button onClick={() => simulation.play()}>Play</button>
+      </div>
     </div>
   );
 }
