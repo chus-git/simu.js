@@ -1,5 +1,5 @@
-import Scene from "../../Scene";
-import KinematicsObject, { IKinematicsObject } from "./KinematicsObject";
+import { Scene } from "../../Scene";
+import { KinematicsObject, IKinematicsObject } from "./KinematicsObject";
 
 class KinematicsScene extends Scene {
 
@@ -15,12 +15,8 @@ class KinematicsScene extends Scene {
 
     }
 
-    addObject(data: Partial<IKinematicsObject> = {}) {
-        console.log("LLEGAMOS AQUI")
-        const newObject: KinematicsObject = new KinematicsObject(data);
-
-        this._objects.push(newObject);
-
+    addObject(object: KinematicsObject) {
+        this._objects.push(object);
     }
 
     update(time: number) {
@@ -29,4 +25,4 @@ class KinematicsScene extends Scene {
 
 }
 
-export default KinematicsScene;
+export { KinematicsScene };

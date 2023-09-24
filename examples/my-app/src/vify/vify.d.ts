@@ -1,7 +1,13 @@
-import KinematicsSimulation from './Modules/Kinematics/KinematicsSimulation';
-import SpecialRelativitySimulation from './Modules/SpecialRelativity/SpecialRelativitySimulation';
-declare class Vify {
-    static KinematicsSimulation(data?: Partial<KinematicsSimulation>): KinematicsSimulation;
-    static SpecialRelativitySimulation(data?: Partial<SpecialRelativitySimulation>): SpecialRelativitySimulation;
-}
-export default Vify;
+export { Simulation, SimulationState } from './Simulation';
+export { Scene } from './Scene';
+export { SceneObject } from './SceneObject';
+export { KinematicsSimulation } from './Modules/Kinematics/KinematicsSimulation';
+export { KinematicsScene } from './Modules/Kinematics/KinematicsScene';
+export { KinematicsObject } from './Modules/Kinematics/KinematicsObject';
+export { SpecialRelativitySimulation } from './Modules/SpecialRelativity/SpecialRelativitySimulation';
+export { SpecialRelativityScene } from './Modules/SpecialRelativity/SpecialRelativityScene';
+export { SpecialRelativityObject } from './Modules/SpecialRelativity/SpecialRelativityObject';
+export * from './constants';
+import { Matrix } from 'mathjs';
+export declare const vector2: (x?: number, y?: number) => Matrix;
+export declare const vector3: (x?: number, y?: number, z?: number) => Matrix;

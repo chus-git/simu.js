@@ -1,5 +1,5 @@
-import Simulation from "../../Simulation";
-import SpecialRelativityScene from "./SpecialRelativityScene";
+import { Simulation } from "../../Simulation";
+import { SpecialRelativityScene } from "./SpecialRelativityScene";
 
 class SpecialRelativitySimulation extends Simulation {
 
@@ -17,4 +17,4 @@ class SpecialRelativitySimulation extends Simulation {
 
 }
 
-export default SpecialRelativitySimulation;
+export { SpecialRelativitySimulation };

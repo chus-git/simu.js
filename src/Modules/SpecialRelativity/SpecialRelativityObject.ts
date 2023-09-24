@@ -1,5 +1,6 @@
-import SceneObject, { ISceneObject } from "../../SceneObject";
+import { SceneObject, ISceneObject } from "../../SceneObject";
 import { Matrix, add, divide, matrix, multiply, subtract, map, norm } from 'mathjs';
+import { SPEED_OF_LIGHT } from "../../constants";
 
 export interface ISpecialRelativityObject extends ISceneObject {
     _velocity: Matrix,
@@ -17,9 +18,6 @@ class SpecialRelativityObject extends SceneObject {
 
     // Lorentz factor
     private _lorentzFactor: number;
-
-    // The speed of light in a vacuum in m/s
-    public static c: number = 299792458;
 
     constructor(data: Partial<ISpecialRelativityObject> = {}) {
 
@@ -85,7 +83,7 @@ class SpecialRelativityObject extends SceneObject {
         const velocity = norm(relativeVelocity);
         console.log(`Velocidad ${velocity}`)
 
-        const properTime = time / Math.sqrt((1 - (Math.pow(Number(velocity), 2)/Math.pow(SpecialRelativityObject.c, 2))));
+        const properTime = time / Math.sqrt((1 - (Math.pow(Number(velocity), 2)/Math.pow(SPEED_OF_LIGHT, 2))));
 
         return properTime;
 
@@ -119,4 +117,4 @@ class SpecialRelativityObject extends SceneObject {
 
 }
 
-export default SpecialRelativityObject;
+export { SpecialRelativityObject };

@@ -1,4 +1,4 @@
-import SceneObject, { ISceneObject } from "../../SceneObject";
+import { SceneObject, ISceneObject } from "../../SceneObject";
 import { Matrix, matrix, add, multiply } from 'mathjs';
 
 export interface IKinematicsObject extends ISceneObject {
@@ -190,4 +190,4 @@ class Acceleration {
 
 }
 
-export default KinematicsObject;
+export { KinematicsObject };

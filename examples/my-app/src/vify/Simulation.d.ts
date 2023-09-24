@@ -1,4 +1,4 @@
-import Scene from "./Scene";
+import { Scene } from "./Scene";
 import EventEmitter from "./EventEmitter";
 declare enum SimulationState {
     Pause = "pause",
@@ -61,4 +61,4 @@ declare class Simulation {
     get state(): SimulationState;
     get scene(): Scene;
 }
-export default Simulation;
+export { Simulation, SimulationState };

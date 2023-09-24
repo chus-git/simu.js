@@ -1,4 +1,4 @@
-import SceneObject, { ISceneObject } from "../../SceneObject";
+import { SceneObject, ISceneObject } from "../../SceneObject";
 import { Matrix } from 'mathjs';
 export interface IKinematicsObject extends ISceneObject {
     _initialVelocity: Matrix;
@@ -48,4 +48,4 @@ declare class Acceleration {
     get startAt(): number;
     get duration(): number;
 }
-export default KinematicsObject;
+export { KinematicsObject };

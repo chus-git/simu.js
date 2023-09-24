@@ -1,4 +1,3 @@
-import SceneObject from "./SceneObject";
 class Scene {
     constructor(data = {}) {
         this._objects = [];
@@ -9,9 +8,8 @@ class Scene {
             object.update(time);
         });
     }
-    addObject(data = {}) {
-        const newObject = new SceneObject(data);
-        this._objects.push(newObject);
+    addObject(object) {
+        this._objects.push(object);
     }
     get objects() {
         return this._objects;
@@ -20,4 +18,4 @@ class Scene {
         this._objects = objects;
     }
 }
-export default Scene;
+export { Scene };

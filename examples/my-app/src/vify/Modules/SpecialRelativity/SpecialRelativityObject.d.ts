@@ -1,4 +1,4 @@
-import SceneObject, { ISceneObject } from "../../SceneObject";
+import { SceneObject, ISceneObject } from "../../SceneObject";
 import { Matrix } from 'mathjs';
 export interface ISpecialRelativityObject extends ISceneObject {
     _velocity: Matrix;
@@ -9,7 +9,6 @@ declare class SpecialRelativityObject extends SceneObject {
     private _velocity;
     private _properTime;
     private _lorentzFactor;
-    static c: number;
     constructor(data?: Partial<ISpecialRelativityObject>);
     update(time: number): void;
     calculateProperTimeDueTimeDilation(time: number, relativeVelocity: Matrix): number;
@@ -20,4 +19,4 @@ declare class SpecialRelativityObject extends SceneObject {
     get velocity(): Matrix;
     set velocity(velocity: Matrix);
 }
-export default SpecialRelativityObject;
+export { SpecialRelativityObject };

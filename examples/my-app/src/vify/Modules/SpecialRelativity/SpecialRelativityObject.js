@@ -1,5 +1,6 @@
-import SceneObject from "../../SceneObject";
+import { SceneObject } from "../../SceneObject";
 import { add, matrix, multiply, norm } from 'mathjs';
+import { SPEED_OF_LIGHT } from "../../constants";
 class SpecialRelativityObject extends SceneObject {
     constructor(data = {}) {
         super(data);
@@ -50,7 +51,7 @@ class SpecialRelativityObject extends SceneObject {
     calculateProperTimeDueTimeDilation(time, relativeVelocity) {
         const velocity = norm(relativeVelocity);
         console.log(`Velocidad ${velocity}`);
-        const properTime = time / Math.sqrt((1 - (Math.pow(Number(velocity), 2) / Math.pow(SpecialRelativityObject.c, 2))));
+        const properTime = time / Math.sqrt((1 - (Math.pow(Number(velocity), 2) / Math.pow(SPEED_OF_LIGHT, 2))));
         return properTime;
     }
     // Setters and Getters
@@ -73,6 +74,4 @@ class SpecialRelativityObject extends SceneObject {
         this._velocity = velocity;
     }
 }
-// The speed of light in a vacuum in m/s
-SpecialRelativityObject.c = 299792458;
-export default SpecialRelativityObject;
+export { SpecialRelativityObject };

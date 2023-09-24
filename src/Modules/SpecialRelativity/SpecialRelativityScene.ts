@@ -1,5 +1,5 @@
-import Scene from "../../Scene";
-import SpecialRelativityObject, {ISpecialRelativityObject} from "./SpecialRelativityObject";
+import { Scene } from "../../Scene";
+import { SpecialRelativityObject, ISpecialRelativityObject} from "./SpecialRelativityObject";
 import { matrix } from "mathjs";
 
 class SpecialRelativityScene extends Scene {
@@ -16,11 +16,8 @@ class SpecialRelativityScene extends Scene {
         
     }
 
-    addObject(data: Partial<ISpecialRelativityObject> = {}): void {
-
-        const newObject = new SpecialRelativityObject(data);
-
-        this._objects.push(newObject);
+    addObject(object: SpecialRelativityObject): void {
+        this._objects.push(object);
     }
 
     update(time: number) {
@@ -29,4 +26,4 @@ class SpecialRelativityScene extends Scene {
 
 }
 
-export default SpecialRelativityScene;
+export { SpecialRelativityScene };

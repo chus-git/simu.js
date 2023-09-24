@@ -1,5 +1,5 @@
-import Simulation from "../../Simulation";
-import KinematicsScene from "./KinematicsScene";
+import { Simulation } from "../../Simulation";
+import { KinematicsScene } from "./KinematicsScene";
 
 class KinematicsSimulation extends Simulation {
 
@@ -17,4 +17,4 @@ class KinematicsSimulation extends Simulation {
 
 }
 
-export default KinematicsSimulation;
+export { KinematicsSimulation };

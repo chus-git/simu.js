@@ -34,4 +34,4 @@ class SceneObject {
         this._actualPosition = position;
     }
 }
-export default SceneObject;
+export { SceneObject };

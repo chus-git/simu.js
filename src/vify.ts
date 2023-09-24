@@ -1,18 +1,24 @@
 // vify.ts
 
-import KinematicsSimulation from './Modules/Kinematics/KinematicsSimulation';
-import SpecialRelativitySimulation from './Modules/SpecialRelativity/SpecialRelativitySimulation';
+export { Simulation, SimulationState } from './Simulation';
+export { Scene } from './Scene';
+export { SceneObject } from './SceneObject';
 
-class Vify {
+export { KinematicsSimulation } from './Modules/Kinematics/KinematicsSimulation';
+export { KinematicsScene } from './Modules/Kinematics/KinematicsScene';
+export { KinematicsObject } from './Modules/Kinematics/KinematicsObject';
+export { SpecialRelativitySimulation } from './Modules/SpecialRelativity/SpecialRelativitySimulation';
+export { SpecialRelativityScene } from './Modules/SpecialRelativity/SpecialRelativityScene';
+export { SpecialRelativityObject } from './Modules/SpecialRelativity/SpecialRelativityObject';
 
-    public static KinematicsSimulation(data: Partial<KinematicsSimulation> = {}): KinematicsSimulation {
-        return new KinematicsSimulation(data);
-    }
+export * from './constants';
 
-    public static SpecialRelativitySimulation(data: Partial<SpecialRelativitySimulation> = {}): SpecialRelativitySimulation {
-        return new SpecialRelativitySimulation(data);
-    }
+import { matrix, Matrix } from 'mathjs';
 
+export const vector2 = (x: number = 0, y: number = 0): Matrix => {
+    return matrix([x, y]);
 }
 
-export default Vify;
+export const vector3 = (x: number = 0, y: number = 0, z: number = 0): Matrix => {
+    return matrix([x, y, z]);
+}

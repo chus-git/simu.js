@@ -1,5 +1,5 @@
-import Simulation from "../../Simulation";
-import KinematicsScene from "./KinematicsScene";
+import { Simulation } from "../../Simulation";
+import { KinematicsScene } from "./KinematicsScene";
 class KinematicsSimulation extends Simulation {
     constructor(data = {}) {
         super(data);
@@ -7,4 +7,4 @@ class KinematicsSimulation extends Simulation {
         Object.assign(this, data);
     }
 }
-export default KinematicsSimulation;
+export { KinematicsSimulation };

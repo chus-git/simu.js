@@ -1,4 +1,4 @@
-import Scene from "./Scene";
+import { Scene } from "./Scene";
 import EventEmitter from "./EventEmitter";
 var SimulationState;
 (function (SimulationState) {
@@ -31,7 +31,7 @@ class Simulation {
      * Otherwise, it resumes the time loop.
      */
     play() {
-        if (this.state === SimulationState.Play) {
+        if (this.state === SimulationState.Play || this.time >= this.duration) {
             return;
         }
         this.state = SimulationState.Play;
@@ -134,4 +134,4 @@ class Simulation {
         return this._scene;
     }
 }
-export default Simulation;
+export { Simulation, SimulationState };

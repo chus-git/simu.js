@@ -1,5 +1,5 @@
-import Simulation from "../../Simulation";
-import SpecialRelativityScene from "./SpecialRelativityScene";
+import { Simulation } from "../../Simulation";
+import { SpecialRelativityScene } from "./SpecialRelativityScene";
 class SpecialRelativitySimulation extends Simulation {
     constructor(data = {}) {
         super(data);
@@ -7,4 +7,4 @@ class SpecialRelativitySimulation extends Simulation {
         Object.assign(this, data);
     }
 }
-export default SpecialRelativitySimulation;
+export { SpecialRelativitySimulation };

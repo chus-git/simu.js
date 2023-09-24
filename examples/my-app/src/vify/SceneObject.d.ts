@@ -21,4 +21,4 @@ declare class SceneObject {
     get actualPosition(): Matrix;
     set actualPosition(position: Matrix);
 }
-export default SceneObject;
+export { SceneObject };

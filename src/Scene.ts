@@ -1,4 +1,4 @@
-import SceneObject, { ISceneObject } from "./SceneObject";
+import {SceneObject, ISceneObject } from "./SceneObject";
 
 class Scene {
 
@@ -18,11 +18,8 @@ class Scene {
         });
     }
 
-    addObject(data: Partial<ISceneObject> = {}) {
-
-        const newObject: SceneObject = new SceneObject(data);
-
-        this._objects.push(newObject);
+    addObject(object: SceneObject) {
+        this._objects.push(object);
     }
 
     get objects() {
@@ -35,4 +32,4 @@ class Scene {
 
 }
 
-export default Scene;
+export { Scene };

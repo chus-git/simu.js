@@ -1,9 +1,9 @@
-import Scene from "../../Scene";
-import SpecialRelativityObject, { ISpecialRelativityObject } from "./SpecialRelativityObject";
+import { Scene } from "../../Scene";
+import { SpecialRelativityObject } from "./SpecialRelativityObject";
 declare class SpecialRelativityScene extends Scene {
     protected _objects: SpecialRelativityObject[];
     constructor(data?: Partial<SpecialRelativityScene>);
-    addObject(data?: Partial<ISpecialRelativityObject>): void;
+    addObject(object: SpecialRelativityObject): void;
     update(time: number): void;
 }
-export default SpecialRelativityScene;
+export { SpecialRelativityScene };

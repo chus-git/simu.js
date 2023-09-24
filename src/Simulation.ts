@@ -1,4 +1,4 @@
-import Scene from "./Scene";
+import {Scene } from "./Scene";
 import EventEmitter from "./EventEmitter";
 
 enum SimulationState {
@@ -62,7 +62,7 @@ class Simulation {
 
     play() {
 
-        if (this.state === SimulationState.Play) {
+        if (this.state === SimulationState.Play || this.time >= this.duration) {
             return;
         }
 
@@ -204,4 +204,4 @@ class Simulation {
 
 }
 
-export default Simulation;
+export { Simulation, SimulationState };

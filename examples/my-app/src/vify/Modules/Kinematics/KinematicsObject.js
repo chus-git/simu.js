@@ -1,4 +1,4 @@
-import SceneObject from "../../SceneObject";
+import { SceneObject } from "../../SceneObject";
 import { matrix, add, multiply } from 'mathjs';
 class KinematicsObject extends SceneObject {
     constructor(data = {}) {
@@ -116,4 +116,4 @@ class Acceleration {
         return this._duration;
     }
 }
-export default KinematicsObject;
+export { KinematicsObject };
