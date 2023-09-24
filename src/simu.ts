@@ -1,4 +1,4 @@
-// vify.ts
+// simu.ts
 
 export { Simulation, SimulationState } from './Simulation';
 export { Scene } from './Scene';
@@ -16,7 +16,7 @@ export * from './constants';
 import { matrix, Matrix } from 'mathjs';
 
 export const vector2 = (x: number = 0, y: number = 0): Matrix => {
-    return matrix([x, y]);
+    return matrix([x, y, 0]);
 }
 
 export const vector3 = (x: number = 0, y: number = 0, z: number = 0): Matrix => {

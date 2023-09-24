@@ -3,7 +3,7 @@
         "target": "ES6",
         "module": "ESNext",
         "declaration": true,
-        "outDir": "examples/my-app/src/vify",
+        "outDir": "dist/simu",
         "strict": true,
         "jsx": "react",
         "esModuleInterop": true,

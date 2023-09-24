@@ -1,4 +1,4 @@
-import {Scene } from "./Scene";
+import { Scene } from "./Scene";
 import EventEmitter from "./EventEmitter";
 
 enum SimulationState {
@@ -32,7 +32,7 @@ class Simulation {
     constructor(data: Partial<Simulation> = {}) {
 
         this._time = 0;
-        this._duration = 10;
+        this._duration = Number.MAX_VALUE;
         this._inLoop = false;
         this._playbackSpeed = 1;
         this._state = SimulationState.Pause;
@@ -50,7 +50,7 @@ class Simulation {
 
     reset() {
         this.time = 0;
-        this.duration = 1;
+        this.duration = Number.MAX_VALUE;
         this.state = SimulationState.Pause;
     }
 
@@ -148,12 +148,20 @@ class Simulation {
         this.updateEventEmmitter.emit(this.time);
     }
 
+    /**
+     * Set the simulation time
+     */
+
+    setTime(time: number) {
+        if (time > this._duration) this._time = this._duration;
+        else this._time = time;
+        this.update();
+    }
+
     /** Setters */
 
     set time(time: number) {
-        if(time > this._duration) this._time = this._duration;
-        else this._time = time;
-        this.update();
+        this.setTime(time);
     }
 
     set duration(duration: number) {
