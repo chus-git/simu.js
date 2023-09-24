@@ -1,3 +1,4 @@
+import SceneObject from "./SceneObject";
 class Scene {
     constructor(data = {}) {
         this._objects = [];
@@ -8,8 +9,9 @@ class Scene {
             object.update(time);
         });
     }
-    addObject(object) {
-        this._objects.push(object);
+    addObject(data = {}) {
+        const newObject = new SceneObject(data);
+        this._objects.push(newObject);
     }
     get objects() {
         return this._objects;

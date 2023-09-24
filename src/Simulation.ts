@@ -27,7 +27,7 @@ class Simulation {
     protected _scene: Scene;
 
     // On update event emmiter
-    public updateEventEmmitter: EventEmitter<Simulation>;
+    public updateEventEmmitter: EventEmitter<number>;
 
     constructor(data: Partial<Simulation> = {}) {
 
@@ -145,7 +145,7 @@ class Simulation {
 
     update() {
         this._scene.update(this.time);
-        this.updateEventEmmitter.emit(this);
+        this.updateEventEmmitter.emit(this.time);
     }
 
     /** Setters */

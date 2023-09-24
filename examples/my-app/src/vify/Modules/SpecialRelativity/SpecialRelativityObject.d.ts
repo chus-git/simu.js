@@ -1,6 +1,6 @@
 import SceneObject, { ISceneObject } from "../../SceneObject";
 import { Matrix } from 'mathjs';
-interface ISpecialRelativityObject extends ISceneObject {
+export interface ISpecialRelativityObject extends ISceneObject {
     _velocity: Matrix;
     _properTime: number;
     _lorentzFactor: number;

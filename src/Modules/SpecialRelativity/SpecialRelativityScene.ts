@@ -1,19 +1,26 @@
 import Scene from "../../Scene";
-import SpecialRelativityObject from "./SpecialRelativityObject";
+import SpecialRelativityObject, {ISpecialRelativityObject} from "./SpecialRelativityObject";
 import { matrix } from "mathjs";
 
 class SpecialRelativityScene extends Scene {
 
+    protected _objects: SpecialRelativityObject[];
+
     constructor(data: Partial<SpecialRelativityScene> = {}) {
+
         super(data);
+
+        this._objects = [];
+
         Object.assign(this, data);
-        this._objects.push(new SpecialRelativityObject({
-            _velocity: matrix([SpecialRelativityObject.c*0.9, 0, 0])
-        }));
+        
     }
 
-    addObject(object: SpecialRelativityObject): void {
-        this._objects.push(object);
+    addObject(data: Partial<ISpecialRelativityObject> = {}): void {
+
+        const newObject = new SpecialRelativityObject(data);
+
+        this._objects.push(newObject);
     }
 
     update(time: number) {
