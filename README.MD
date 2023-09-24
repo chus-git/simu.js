@@ -40,5 +40,5 @@ If everything went well, you should see the following output
 You can clone this repository with the following command:
 
 ```sh
-git clone https://github.com/chus-git/simujs.git
+git clone https://github.com/chus-git/simu.js.git
 ```
