@@ -4,15 +4,6 @@
 
 This library provides a logic engine that allows you to represent physics simulations where objects interact in a 1D, 2D, or 3D space over time. It can be implemented in any web library or framework.
 
-[Examples](https://threejs.org/examples/) &mdash;
-[Docs](https://threejs.org/docs/) &mdash;
-[Manual](https://threejs.org/manual/) &mdash;
-[Wiki](https://github.com/mrdoob/three.js/wiki) &mdash;
-[Migrating](https://github.com/mrdoob/three.js/wiki/Migration-Guide) &mdash;
-[Questions](https://stackoverflow.com/questions/tagged/three.js) &mdash;
-[Forum](https://discourse.threejs.org/) &mdash;
-[Discord](https://discord.gg/56GBJwAnUS)
-
 ### Usage
 
 This code creates a simulation where an object with a position and velocity moves over time in a simulation with a scene prepared for calculations in the field of kinematics. In this case, we will observe the object's position at different moments in time in a two-dimensional space.
