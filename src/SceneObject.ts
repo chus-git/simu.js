@@ -63,10 +63,6 @@ class SceneObject {
         return this._actualPosition;
     }
 
-    set actualPosition(position: Matrix) {
-        this._actualPosition = position;
-    }
-
 }
 
 export { SceneObject };

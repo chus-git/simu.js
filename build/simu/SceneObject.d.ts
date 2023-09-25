@@ -19,6 +19,5 @@ declare class SceneObject {
     get initialPosition(): Matrix;
     set initialPosition(position: Matrix);
     get actualPosition(): Matrix;
-    set actualPosition(position: Matrix);
 }
 export { SceneObject };

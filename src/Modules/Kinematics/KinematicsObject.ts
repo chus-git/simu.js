@@ -3,7 +3,7 @@ import { Matrix, matrix, add, multiply } from 'mathjs';
 
 export interface IKinematicsObject extends ISceneObject {
     _initialVelocity: Matrix,
-    _accelerations: Acceleration[],
+    _accelerations: KinematicAcceleration[],
     _actualVelocity: Matrix,
     _actualAcceleration: Matrix,
     _accelerationIntervals: { startAt: number, endAt: number, duration: number, value: Matrix }[],
@@ -15,7 +15,7 @@ class KinematicsObject extends SceneObject {
     private _initialVelocity: Matrix;
 
     // Accelerations over time
-    private _accelerations: Acceleration[] = [];
+    private _accelerations: KinematicAcceleration[] = [];
 
     // Actual velocity
     private _actualVelocity: Matrix;
@@ -43,7 +43,7 @@ class KinematicsObject extends SceneObject {
     }
 
     update(time: number) {
-console.log("Intervalos de aceleracion " + this._accelerationIntervals)
+
         // Initialize the current position, velocity, and acceleration to their initial values
         let currentPosition = this._initialPosition;
         let currentVelocity = this._initialVelocity;
@@ -74,7 +74,7 @@ console.log("Intervalos de aceleracion " + this._accelerationIntervals)
         this._actualPosition = currentPosition;
         this._actualVelocity = currentVelocity;
         this._actualAcceleration = currentAcceleration;
-console.log("Posicion final: ",this._actualPosition.toString())
+
     }
 
     /**
@@ -108,7 +108,7 @@ console.log("Posicion final: ",this._actualPosition.toString())
                 value: matrix([0, 0, 0])
             }
 
-            this._accelerations.forEach((acceleration: Acceleration) => {
+            this._accelerations.forEach((acceleration: KinematicAcceleration) => {
 
                 if (accelerationInterval.startAt >= acceleration.startAt && accelerationInterval.endAt <= acceleration.startAt + acceleration.duration) {
                     accelerationInterval.value = add(accelerationInterval.value, acceleration.value);
@@ -122,7 +122,7 @@ console.log("Posicion final: ",this._actualPosition.toString())
 
     }
 
-    addAcceleration(acceleration: Acceleration) {
+    addAcceleration(acceleration: KinematicAcceleration) {
         this._accelerations.push(acceleration);
         this.calculateAccelerationIntervals();
     }
@@ -140,10 +140,6 @@ console.log("Posicion final: ",this._actualPosition.toString())
 
     /** Setters */
 
-    set initialPosition(initialPosition: Matrix) {
-        this._initialPosition = initialPosition;
-    }
-
     set initialVelocity(initialVelocity: Matrix) {
         this._initialVelocity = initialVelocity;
     }
@@ -152,9 +148,17 @@ console.log("Posicion final: ",this._actualPosition.toString())
         this._accelerationIntervals = accelerationIntervals;
     }
 
+    get initialVelocity(): Matrix {
+        return this._initialVelocity;
+    }
+
+    get actualVelocity(): Matrix {
+        return this._actualVelocity;
+    }
+
 }
 
-export class Acceleration {
+class KinematicAcceleration {
 
     private _value: Matrix = matrix([0, 0, 0]);
 
@@ -162,7 +166,7 @@ export class Acceleration {
 
     private _duration: number = 1;
 
-    constructor(data: Partial<Acceleration> = {}) {
+    constructor(data: Partial<KinematicAcceleration> = {}) {
         Object.assign(this, data);
     }
 
@@ -193,4 +197,4 @@ export class Acceleration {
 
 }
 
-export { KinematicsObject };
+export { KinematicsObject, KinematicAcceleration };

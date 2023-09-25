@@ -2,7 +2,7 @@ import { SceneObject, ISceneObject } from "../../SceneObject";
 import { Matrix } from 'mathjs';
 export interface IKinematicsObject extends ISceneObject {
     _initialVelocity: Matrix;
-    _accelerations: Acceleration[];
+    _accelerations: KinematicAcceleration[];
     _actualVelocity: Matrix;
     _actualAcceleration: Matrix;
     _accelerationIntervals: {
@@ -24,10 +24,9 @@ declare class KinematicsObject extends SceneObject {
      * Calculate acceleration intervals based on all provided accelerations
      */
     calculateAccelerationIntervals(): void;
-    addAcceleration(acceleration: Acceleration): void;
+    addAcceleration(acceleration: KinematicAcceleration): void;
     removeAcceleration(index: number): void;
     /** Setters */
-    set initialPosition(initialPosition: Matrix);
     set initialVelocity(initialVelocity: Matrix);
     set accelerationIntervals(accelerationIntervals: {
         startAt: number;
@@ -35,12 +34,14 @@ declare class KinematicsObject extends SceneObject {
         duration: number;
         value: Matrix;
     }[]);
+    get initialVelocity(): Matrix;
+    get actualVelocity(): Matrix;
 }
-export declare class Acceleration {
+declare class KinematicAcceleration {
     private _value;
     private _startAt;
     private _duration;
-    constructor(data?: Partial<Acceleration>);
+    constructor(data?: Partial<KinematicAcceleration>);
     set value(value: Matrix);
     set startAt(startAt: number);
     set duration(duration: number);
@@ -48,4 +49,4 @@ export declare class Acceleration {
     get startAt(): number;
     get duration(): number;
 }
-export { KinematicsObject };
+export { KinematicsObject, KinematicAcceleration };

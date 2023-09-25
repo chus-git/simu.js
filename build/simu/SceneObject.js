@@ -30,8 +30,5 @@ class SceneObject {
     get actualPosition() {
         return this._actualPosition;
     }
-    set actualPosition(position) {
-        this._actualPosition = position;
-    }
 }
 export { SceneObject };

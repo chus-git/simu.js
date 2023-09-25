@@ -14,7 +14,6 @@ class KinematicsObject extends SceneObject {
         this.calculateAccelerationIntervals();
     }
     update(time) {
-        console.log("Intervalos de aceleracion " + this._accelerationIntervals);
         // Initialize the current position, velocity, and acceleration to their initial values
         let currentPosition = this._initialPosition;
         let currentVelocity = this._initialVelocity;
@@ -36,7 +35,6 @@ class KinematicsObject extends SceneObject {
         this._actualPosition = currentPosition;
         this._actualVelocity = currentVelocity;
         this._actualAcceleration = currentAcceleration;
-        console.log("Posicion final: ", this._actualPosition.toString());
     }
     /**
      * Calculate acceleration intervals based on all provided accelerations
@@ -83,17 +81,20 @@ class KinematicsObject extends SceneObject {
         }
     }
     /** Setters */
-    set initialPosition(initialPosition) {
-        this._initialPosition = initialPosition;
-    }
     set initialVelocity(initialVelocity) {
         this._initialVelocity = initialVelocity;
     }
     set accelerationIntervals(accelerationIntervals) {
         this._accelerationIntervals = accelerationIntervals;
     }
+    get initialVelocity() {
+        return this._initialVelocity;
+    }
+    get actualVelocity() {
+        return this._actualVelocity;
+    }
 }
-export class Acceleration {
+class KinematicAcceleration {
     constructor(data = {}) {
         this._value = matrix([0, 0, 0]);
         this._startAt = 0;
@@ -119,4 +120,4 @@ export class Acceleration {
         return this._duration;
     }
 }
-export { KinematicsObject };
+export { KinematicsObject, KinematicAcceleration };
