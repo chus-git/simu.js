@@ -3,7 +3,7 @@
         "target": "ES6",
         "module": "ESNext",
         "declaration": true,
-        "outDir": "dist/simu",
+        "outDir": "build/simu",
         "strict": true,
         "jsx": "react",
         "esModuleInterop": true,
