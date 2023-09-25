@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
-import * as Simu from 'simu/src/simu';
+import * as Simu from 'simu';
+import * as Slash from 'maths';
 import './App.css'
 
 function App() {
