@@ -2,7 +2,7 @@
     "name": "simu",
     "version": "0.1.0-alpha.5",
     "description": "JavaScript physics simulation library",
-    "main": "./build/simu.js",
+    "main": "./build/simu/simu.js",
     "scripts": {
         "build": "tsc"
     },
