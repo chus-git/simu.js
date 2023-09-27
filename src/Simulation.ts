@@ -127,6 +127,8 @@ class Simulation {
 
             this.time = time;
 
+            this.update();
+
             // Continue with the loop if simulation is playing
             if (this.state === SimulationState.Play) {
                 requestAnimationFrame(timeLoop);
@@ -143,29 +145,22 @@ class Simulation {
      * simulation time
      */
 
-    update() {
-        this._scene.update(this.time);
-        this.updateEventEmmitter.emit(this.time);
-    }
-
-    /**
-     * Set the simulation time
-     */
-
-    setTime(time: number) {
-        if (time > this._duration) this._time = this._duration;
-        else this._time = time;
-        this.update();
+    update(time: number = this._time) {
+        this._scene.update(time);
+        this.updateEventEmmitter.emit(time);
     }
 
     /** Setters */
 
     set time(time: number) {
-        this.setTime(time);
+        if (time > this._duration) this._time = this._duration;
+        else this._time = time;
+        this.update();
     }
 
     set duration(duration: number) {
         this._duration = duration;
+        this.update();
     }
 
     set inLoop(inLoop: boolean) {
@@ -182,6 +177,7 @@ class Simulation {
 
     set scene(scene: Scene) {
         this._scene = scene;
+        this.update();
     }
 
     /** Getters */
