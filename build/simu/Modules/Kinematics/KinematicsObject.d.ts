@@ -1,52 +1,36 @@
 import { SceneObject, ISceneObject } from "../../SceneObject";
-import { Matrix } from 'mathjs';
+import { Velocity, Acceleration } from "../../utils";
 export interface IKinematicsObject extends ISceneObject {
-    _initialVelocity: Matrix;
-    _accelerations: KinematicAcceleration[];
-    _actualVelocity: Matrix;
-    _actualAcceleration: Matrix;
-    _accelerationIntervals: {
-        startAt: number;
-        endAt: number;
-        duration: number;
-        value: Matrix;
-    }[];
+    _initialVelocity: Velocity;
+    _accelerations: Acceleration[];
+    _actualVelocity: Velocity;
+    _actualAcceleration: Acceleration;
 }
 declare class KinematicsObject extends SceneObject {
     private _initialVelocity;
-    private _accelerations;
     private _actualVelocity;
+    private _accelerations;
     private _actualAcceleration;
     private _accelerationIntervals;
     constructor(data?: Partial<IKinematicsObject>);
+    /**
+     * Calculate the position, velocity and acceleration on the indicated time.
+     * It will be necessary to pay attention to the acceleration intervals to
+     * which the object is subjected.
+    */
     update(time: number): void;
     /**
-     * Calculate acceleration intervals based on all provided accelerations
+     * Calculate acceleration intervals based on all provided accelerations. This must
+     * be called after every this._accelerations variable modification.
      */
     calculateAccelerationIntervals(): void;
-    addAcceleration(acceleration: KinematicAcceleration): void;
+    addAcceleration(acceleration: Acceleration): void;
     removeAcceleration(index: number): void;
+    /** Getters */
+    get actualVelocity(): Velocity;
+    get actualAcceleration(): Acceleration;
     /** Setters */
-    set initialVelocity(initialVelocity: Matrix);
-    set accelerationIntervals(accelerationIntervals: {
-        startAt: number;
-        endAt: number;
-        duration: number;
-        value: Matrix;
-    }[]);
-    get initialVelocity(): Matrix;
-    get actualVelocity(): Matrix;
+    set initialVelocity(initialVelocity: Velocity);
+    get initialVelocity(): Velocity;
 }
-declare class KinematicAcceleration {
-    private _value;
-    private _startAt;
-    private _duration;
-    constructor(data?: Partial<KinematicAcceleration>);
-    set value(value: Matrix);
-    set startAt(startAt: number);
-    set duration(duration: number);
-    get value(): Matrix;
-    get startAt(): number;
-    get duration(): number;
-}
-export { KinematicsObject, KinematicAcceleration };
+export { KinematicsObject };

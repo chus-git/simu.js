@@ -46,10 +46,6 @@ declare class Simulation {
      * simulation time
      */
     update(): void;
-    /**
-     * Set the simulation time
-     */
-    setTime(time: number): void;
     /** Setters */
     set time(time: number);
     set duration(duration: number);
@@ -64,5 +60,8 @@ declare class Simulation {
     get playbackSpeed(): number;
     get state(): SimulationState;
     get scene(): Scene;
+}
+export declare enum VelocityUnit {
+    MetersPerSecond = 0
 }
 export { Simulation, SimulationState };

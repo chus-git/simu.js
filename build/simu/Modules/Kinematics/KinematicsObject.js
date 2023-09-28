@@ -1,43 +1,46 @@
 import { SceneObject } from "../../SceneObject";
-import { matrix, add, multiply } from 'mathjs';
+import { matrix, add } from 'mathjs';
+import { KinematicsUtils } from "../../simu";
+import { Velocity, Acceleration } from "../../utils";
 class KinematicsObject extends SceneObject {
     constructor(data = {}) {
         super(data);
         // Accelerations over time
         this._accelerations = [];
-        this._initialVelocity = matrix([0, 0, 0]);
+        this._initialVelocity = new Velocity();
+        this._actualVelocity = new Velocity();
         this._accelerations = [];
-        this._actualVelocity = matrix([0, 0, 0]);
-        this._actualAcceleration = matrix([0, 0, 0]);
+        this._actualAcceleration = new Acceleration();
         this._accelerationIntervals = [];
         Object.assign(this, data);
         this.calculateAccelerationIntervals();
     }
+    /**
+     * Calculate the position, velocity and acceleration on the indicated time.
+     * It will be necessary to pay attention to the acceleration intervals to
+     * which the object is subjected.
+    */
     update(time) {
-        // Initialize the current position, velocity, and acceleration to their initial values
-        let currentPosition = this._initialPosition;
-        let currentVelocity = this._initialVelocity;
+        let currentPosition = this._actualPosition.vector;
+        let currentVelocity = this._initialVelocity.vector;
         let currentAcceleration = matrix([0, 0, 0]);
         this._accelerationIntervals.forEach((accelerationInterval) => {
             if (accelerationInterval.startAt <= time) {
-                // Calculate the duration of the current interval
-                let intervalDuration = accelerationInterval.endAt < time ? accelerationInterval.duration : time - accelerationInterval.startAt;
-                // Calculate the actual position at the end of this interval
-                currentPosition = add(add(currentPosition, multiply(currentVelocity, intervalDuration)), multiply(0.5, multiply(accelerationInterval.value, Math.pow(intervalDuration, 2))));
-                // Calculate the actual velocity at the end of this interval
-                currentVelocity = add(currentVelocity, multiply(intervalDuration, accelerationInterval.value));
+                const intervalDuration = accelerationInterval.endAt < time ? accelerationInterval.duration : time - accelerationInterval.startAt;
+                currentPosition = KinematicsUtils.calculatePosition(currentPosition, currentVelocity, intervalDuration, accelerationInterval.vector);
+                currentVelocity = KinematicsUtils.calculateVelocity(currentVelocity, intervalDuration, accelerationInterval.vector);
             }
             if (accelerationInterval.startAt <= time && accelerationInterval.endAt >= time) {
-                // Set the actual acceleration if the acceleration is occurring
-                currentAcceleration = accelerationInterval.value;
+                currentAcceleration = accelerationInterval.vector;
             }
         });
-        this._actualPosition = currentPosition;
-        this._actualVelocity = currentVelocity;
-        this._actualAcceleration = currentAcceleration;
+        this._actualPosition.vector = currentPosition;
+        this._actualVelocity.vector = currentVelocity;
+        this._actualAcceleration.vector = currentAcceleration;
     }
     /**
-     * Calculate acceleration intervals based on all provided accelerations
+     * Calculate acceleration intervals based on all provided accelerations. This must
+     * be called after every this._accelerations variable modification.
      */
     calculateAccelerationIntervals() {
         // Get all points where accelerations change
@@ -57,11 +60,11 @@ class KinematicsObject extends SceneObject {
                 startAt: points[i - 1],
                 endAt: points[i],
                 duration: points[i] - points[i - 1],
-                value: matrix([0, 0, 0])
+                vector: matrix([0, 0, 0])
             };
             this._accelerations.forEach((acceleration) => {
                 if (accelerationInterval.startAt >= acceleration.startAt && accelerationInterval.endAt <= acceleration.startAt + acceleration.duration) {
-                    accelerationInterval.value = add(accelerationInterval.value, acceleration.value);
+                    accelerationInterval.vector = add(accelerationInterval.vector, acceleration.vector);
                 }
             });
             this._accelerationIntervals.push(accelerationInterval);
@@ -80,44 +83,19 @@ class KinematicsObject extends SceneObject {
             console.error(`Invalid index: ${index}. Cannot remove acceleration.`);
         }
     }
+    /** Getters */
+    get actualVelocity() {
+        return this._actualVelocity;
+    }
+    get actualAcceleration() {
+        return this._actualAcceleration;
+    }
     /** Setters */
     set initialVelocity(initialVelocity) {
         this._initialVelocity = initialVelocity;
     }
-    set accelerationIntervals(accelerationIntervals) {
-        this._accelerationIntervals = accelerationIntervals;
-    }
     get initialVelocity() {
         return this._initialVelocity;
     }
-    get actualVelocity() {
-        return this._actualVelocity;
-    }
 }
-class KinematicAcceleration {
-    constructor(data = {}) {
-        this._value = matrix([0, 0, 0]);
-        this._startAt = 0;
-        this._duration = 1;
-        Object.assign(this, data);
-    }
-    set value(value) {
-        this._value = value;
-    }
-    set startAt(startAt) {
-        this._startAt = startAt;
-    }
-    set duration(duration) {
-        this._duration = duration;
-    }
-    get value() {
-        return this._value;
-    }
-    get startAt() {
-        return this._startAt;
-    }
-    get duration() {
-        return this._duration;
-    }
-}
-export { KinematicsObject, KinematicAcceleration };
+export { KinematicsObject };

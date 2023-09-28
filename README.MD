@@ -23,7 +23,7 @@ const object = new Simu.KinematicsObject({
 
 simulation.scene.addObject(object);
 
-simulation.setTime(1);
+simulation.time = 1;
 
 console.log(object.name + " is at position x=" + object.actualPosition.get([0]) + "m at second " + simulation.time);
 

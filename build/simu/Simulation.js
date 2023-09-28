@@ -76,6 +76,7 @@ class Simulation {
                 this.pause();
             }
             this.time = time;
+            this.update();
             // Continue with the loop if simulation is playing
             if (this.state === SimulationState.Play) {
                 requestAnimationFrame(timeLoop);
@@ -88,25 +89,20 @@ class Simulation {
      * simulation time
      */
     update() {
-        this._scene.update(this.time);
-        this.updateEventEmmitter.emit(this.time);
+        this._scene.update(this._time);
+        this.updateEventEmmitter.emit(this._time);
     }
-    /**
-     * Set the simulation time
-     */
-    setTime(time) {
+    /** Setters */
+    set time(time) {
         if (time > this._duration)
             this._time = this._duration;
         else
             this._time = time;
         this.update();
     }
-    /** Setters */
-    set time(time) {
-        this.setTime(time);
-    }
     set duration(duration) {
         this._duration = duration;
+        this.update();
     }
     set inLoop(inLoop) {
         this._inLoop = inLoop;
@@ -119,6 +115,7 @@ class Simulation {
     }
     set scene(scene) {
         this._scene = scene;
+        this.update();
     }
     /** Getters */
     get time() {
@@ -140,4 +137,8 @@ class Simulation {
         return this._scene;
     }
 }
+export var VelocityUnit;
+(function (VelocityUnit) {
+    VelocityUnit[VelocityUnit["MetersPerSecond"] = 0] = "MetersPerSecond";
+})(VelocityUnit || (VelocityUnit = {}));
 export { Simulation, SimulationState };
