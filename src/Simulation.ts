@@ -37,7 +37,6 @@ class Simulation {
         this._playbackSpeed = 1;
         this._state = SimulationState.Pause;
         this._scene = new Scene();
-
         this.updateEventEmmitter = new EventEmitter();
 
         Object.assign(this, data);
@@ -145,9 +144,9 @@ class Simulation {
      * simulation time
      */
 
-    update(time: number = this._time) {
-        this._scene.update(time);
-        this.updateEventEmmitter.emit(time);
+    update() {
+        this._scene.update(this._time);
+        this.updateEventEmmitter.emit(this._time);
     }
 
     /** Setters */

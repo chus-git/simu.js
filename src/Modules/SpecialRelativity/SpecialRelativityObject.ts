@@ -1,6 +1,9 @@
 import { SceneObject, ISceneObject } from "../../SceneObject";
-import { Matrix, add, divide, matrix, multiply, subtract, map, norm } from 'mathjs';
+import { Matrix, add, matrix, multiply, norm } from 'mathjs';
 import { SPEED_OF_LIGHT } from "../../constants";
+import { Position, Velocity } from "../../utils";
+import { calculateProperTimeDueTimeDilation } from "./SpecialRelativityUtils";
+import { calculatePosition, calculateVelocity } from "../Kinematics/KinematicsUtils";
 
 export interface ISpecialRelativityObject extends ISceneObject {
     _velocity: Matrix,
@@ -11,7 +14,7 @@ export interface ISpecialRelativityObject extends ISceneObject {
 class SpecialRelativityObject extends SceneObject {
 
     // Initial velocity vector
-    private _velocity: Matrix;
+    private _velocity: Velocity;
 
     // Proper time
     private _properTime: number;
@@ -23,7 +26,7 @@ class SpecialRelativityObject extends SceneObject {
 
         super(data);
 
-        this._velocity = matrix([0, 0, 0]);
+        this._velocity = new Velocity();
         this._properTime = 0;
         this._lorentzFactor = 1;
 
@@ -33,85 +36,36 @@ class SpecialRelativityObject extends SceneObject {
 
     update(time: number) {
 
-        // Calculate the actual position
-        const actualPosition: Matrix = add(
-            this._initialPosition,
-            multiply(this._velocity, time)
-        );
-        this._actualPosition = actualPosition;
-
-        // Calculate proper time relative to point 0
-        this._properTime = this.calculateProperTimeDueTimeDilation(time, this._velocity);
-
-        /*console.log("Se procede a actualizar con tiempo " + time)
-
-        // Numerator
-        const numerator: Matrix = subtract(this._initialPosition, multiply(this._velocity, time));
-        console.log(`Numerador - Paso 1 - Multiplicamos ${this._velocity.toString()} por ${time} => ${multiply(this._velocity, time)}`);
-        console.log(`Numerador - Paso 2 - Restamos ${this._initialPosition} - ${multiply(this._velocity, time)} => ${subtract(this._initialPosition, multiply(this._velocity, time))}`);
-
-        const velocityPow2: Matrix = map(this._velocity, (velocity) => Math.pow(velocity, 2));
-        console.log(`Denominador - Paso 1 - Elevamos la velocidad al cuadrado: ${velocityPow2.toString()}.`)
-
-        const division = map(
-            velocityPow2, (value) => value / Math.pow(SpecialRelativityObject.c, 2)
-        );
-
-
-        console.log(`Denominador - Paso 2 - Elevamos c al cuadrado: ${Math.pow(SpecialRelativityObject.c, 2)}.`)
-        console.log(`Denominador - Paso 3 - Dividimos la velocidad al cuadrado entre c al cuadrado: ${division.toString()}`)
-
-        // Denominator
-        const denominator = map(
-            map(division, (division) => 1 - division), (differenceResult) => Math.sqrt(differenceResult)
-        );
-
-        console.log(`Denominador - Paso 4 - Restamos 1 a la division: ${map(division, (division) => 1 - division)}`);
-        console.log(`Denominador - Paso 5 - Raiz cuadrada de la resta: ${map(
-            map(division, (division) => 1 - division), (differenceResult) => Math.sqrt(differenceResult)
-        )}`);
-
-        this._actualPosition = map(numerator, (value, index) => value / denominator.get(index))
-        console.log(`Posicion actual - Paso 1 - Dividimos el nominador por el denominador: ${this._actualPosition.toString()}`)
-
-        console.log(this._actualPosition.toString())*/
+        this._actualPosition.vector = calculatePosition(this._initialPosition.vector, this._velocity.vector, time);
+        this._properTime = calculateProperTimeDueTimeDilation(this._velocity.vector, time);
 
     }
 
-    calculateProperTimeDueTimeDilation(time: number, relativeVelocity: Matrix): number {
-        
-        const velocity = norm(relativeVelocity);
-        console.log(`Velocidad ${velocity}`)
-
-        const properTime = time / Math.sqrt((1 - (Math.pow(Number(velocity), 2)/Math.pow(SPEED_OF_LIGHT, 2))));
-
-        return properTime;
-
-    }
-
-    // Setters and Getters
+    /** Getters */
 
     get properTime(): number {
         return this._properTime;
     }
 
+    get actualPosition(): Position {
+        return this._actualPosition;
+    }
+
+    get velocity(): Velocity {
+        return this._velocity;
+    }
+
+    /** Setters */
+
     set properTime(time: number) {
         this._properTime = time;
     }
 
-    get actualPosition(): Matrix {
-        return this._actualPosition;
-    }
-
-    set actualPosition(position: Matrix) {
+    set actualPosition(position: Position) {
         this._actualPosition = position;
     }
 
-    get velocity(): Matrix {
-        return this._velocity;
-    }
-
-    set velocity(velocity: Matrix) {
+    set velocity(velocity: Velocity) {
         this._velocity = velocity;
     }
 
