@@ -11,11 +11,9 @@ This code creates a simulation where an object with a position and velocity move
 ```javascript
 import * as SIMU from 'simu';
 
-// init
+let simulation = new SIMU.KinematicsSimulation();
 
-const simulation = new SIMU.KinematicsSimulation();
-
-const object = new SIMU.KinematicsObject({
+let object = new SIMU.KinematicsObject({
     _name: 'Funny object',
     _initialVelocity: new SIMU.Velocity({_x: 1})
 });

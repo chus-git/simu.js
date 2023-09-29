@@ -1,6 +1,6 @@
 import { SceneObject } from "../../SceneObject";
 import { Velocity } from "../../utils";
-import { calculateProperTimeDueTimeDilation } from "./SpecialRelativityUtils";
+import { calculateTimeDilation } from "./SpecialRelativityUtils";
 import { calculatePosition } from "../Kinematics/KinematicsUtils";
 class SpecialRelativityObject extends SceneObject {
     constructor(data = {}) {
@@ -12,7 +12,7 @@ class SpecialRelativityObject extends SceneObject {
     }
     update(time) {
         this._actualPosition.vector = calculatePosition(this._initialPosition.vector, this._velocity.vector, time);
-        this._properTime = calculateProperTimeDueTimeDilation(this._velocity.vector, time);
+        this._properTime = calculateTimeDilation(this._velocity.vector, time);
     }
     /** Getters */
     get properTime() {

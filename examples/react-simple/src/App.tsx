@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import * as SIMU from '../../../build/simu/simu';
 import './App.css';
-import Representation from './components/Representation';
 
 function App() {
 
@@ -50,7 +49,7 @@ function App() {
           <p style={{ marginBottom: '30px' }}><span style={{ color: 'rgb(255 63 63)' }}><strong>Statement:</strong></span> A car is traveling at 36 km/h. There is an elderly person crossing the road 20 meters ahead. What is the minimum deceleration the car must apply to avoid hitting the elderly person?</p>
         </header>
         <div style={{ width: '100%', background: 'white', height: '400px' }}>
-          <Representation simulaton={simulation} car={car} person={person}/>
+          
         </div>
         <button onClick={() => {
           if (simulation.state === 'play') {
