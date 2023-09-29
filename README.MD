@@ -9,23 +9,22 @@ This library provides a logic engine that allows you to represent physics simula
 This code creates a simulation where an object with a position and velocity moves over time in a simulation with a scene prepared for calculations in the field of kinematics. In this case, we will observe the object's position at different moments in time in a two-dimensional space.
 
 ```javascript
-import * as Simu from 'simu';
+import * as SIMU from 'simu';
 
 // init
 
-const simulation = new Simu.KinematicsSimulation();
+const simulation = new SIMU.KinematicsSimulation();
 
-const object = new Simu.KinematicsObject({
+const object = new SIMU.KinematicsObject({
     _name: 'Funny object',
-    _initialPosition: Simu.vector2(0, 0),
-    _initialVelocity: Simu.vector2(1, 0)
+    _initialVelocity: new SIMU.Velocity({_x: 1})
 });
 
 simulation.scene.addObject(object);
 
 simulation.time = 1;
 
-console.log(object.name + " is at position x=" + object.actualPosition.get([0]) + "m at second " + simulation.time);
+console.log(object.name + " is at position x=" + object.actualPosition.x + "m at second " + simulation.time);
 
 ```
 
