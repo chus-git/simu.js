@@ -1,6 +1,6 @@
 {
     "name": "simu",
-    "version": "0.1.0-alpha.8",
+    "version": "0.1.0-alpha.9",
     "description": "JavaScript physics simulation library",
     "main": "./build/simu/simu.js",
     "scripts": {
