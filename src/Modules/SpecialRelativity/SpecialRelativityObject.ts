@@ -1,8 +1,7 @@
 import { SceneObject, ISceneObject } from "../../SceneObject";
-import { Matrix, add, matrix, multiply, norm } from 'mathjs';
-import { SPEED_OF_LIGHT } from "../../constants";
+import { Matrix, norm, subtract } from 'mathjs';
 import { Position, Velocity } from "../../utils";
-import { calculateProperTimeDueTimeDilation } from "./SpecialRelativityUtils";
+import { calculateLorentzFactor, calculateTimeDilation } from "./SpecialRelativityUtils";
 import { calculatePosition, calculateVelocity } from "../Kinematics/KinematicsUtils";
 
 export interface ISpecialRelativityObject extends ISceneObject {
@@ -37,7 +36,27 @@ class SpecialRelativityObject extends SceneObject {
     update(time: number) {
 
         this._actualPosition.vector = calculatePosition(this._initialPosition.vector, this._velocity.vector, time);
-        this._properTime = calculateProperTimeDueTimeDilation(this._velocity.vector, time);
+        this._properTime = calculateTimeDilation(Number(norm(this._velocity.vector)), time);
+        this._lorentzFactor = calculateLorentzFactor(Number(norm(this._velocity.vector)));
+
+    }
+
+    calculateRelativisticProperties(otherObject: SpecialRelativityObject): RelativeProperties {
+
+        // Relative velocity between this and other object
+        const vRelative: Matrix = subtract(otherObject.velocity.vector, this._velocity.vector);
+
+        // Relative time between this and other object
+        const tRelative: number = calculateTimeDilation(Number(norm(vRelative)), otherObject.properTime);
+
+        // Relative lorentz factor bewteen this and other object
+        const lorentzFactor: number = calculateLorentzFactor(Number(norm(vRelative)));
+
+        return {
+            vRelative: vRelative,
+            tRelative: tRelative,
+            lorentzFactor: lorentzFactor
+        };
 
     }
 
@@ -69,6 +88,12 @@ class SpecialRelativityObject extends SceneObject {
         this._velocity = velocity;
     }
 
+}
+
+interface RelativeProperties {
+    vRelative: Matrix,
+    tRelative: number,
+    lorentzFactor: number
 }
 
 export { SpecialRelativityObject };

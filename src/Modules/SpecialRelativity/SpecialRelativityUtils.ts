@@ -1,12 +1,13 @@
-import { Matrix, norm } from "mathjs"
 import { SPEED_OF_LIGHT } from "../../constants";
 
-const calculateProperTimeDueTimeDilation = (v0: Matrix, t: number) => {
-
-    const properTime = t / Math.sqrt((1 - (Math.pow(Number(norm(v0)), 2) / Math.pow(SPEED_OF_LIGHT, 2))));
-
+const calculateTimeDilation = (v: number, t: number) => {
+    const properTime = t / Math.sqrt((1 - v ** 2 / SPEED_OF_LIGHT ** 2));
     return properTime;
-
 }
 
-export { calculateProperTimeDueTimeDilation };
+const calculateLorentzFactor = (v: number) => {
+    const lorentzFactor = 1 / (Math.sqrt(1 - v) / SPEED_OF_LIGHT ** 2);
+    return lorentzFactor;
+}
+
+export { calculateTimeDilation, calculateLorentzFactor };
