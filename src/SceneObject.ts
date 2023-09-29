@@ -13,26 +13,32 @@ class SceneObject {
     // Object name
     private _name: string;
 
-    // Object icon
-    private _icon: string;
-
     // Initial object position
     protected _initialPosition: Position;
 
     // Actual object position
     protected _actualPosition: Position;
 
+    // Last time update
+    protected _lastTimeUpdate: number;
+
     constructor(data: Partial<ISceneObject> = {}) {
 
         this._name = "New object";
-        this._icon = "default.png";
         this._initialPosition = new Position();
         this._actualPosition = new Position();
+        this._lastTimeUpdate = 0;
 
         Object.assign(this, data);
     }
 
-    update(time: number) {
+    update(time: number): boolean {
+
+        if (time === this._lastTimeUpdate) return false;
+
+        this._lastTimeUpdate = time;
+
+        return true;
 
     }
 
@@ -40,10 +46,6 @@ class SceneObject {
 
     get name(): string {
         return this._name;
-    }
-
-    get icon(): string {
-        return this._icon;
     }
 
     get initialPosition(): Position {
@@ -58,10 +60,6 @@ class SceneObject {
 
     set name(name: string) {
         this._name = name;
-    }
-
-    set icon(icon: string) {
-        this._icon = icon;
     }
 
     set initialPosition(position: Position) {
