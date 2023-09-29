@@ -75,10 +75,25 @@ class Position {
 }
 
 enum PositionUnit {
+    Nanometers = 1e+9,
+    Micrometers = 1e+6,
+    Millimeters = 1e+3,
+    Centimeters = 1e+2,
+    Decimeters = 1e+1,
     Meters = 1,
-    Kilometers = 0.001,
+    Dekameters = 1e-1,
+    Hectometers = 1e-2,
+    Kilometers = 1e-3,
+    Megameters = 1e-6,
+    Gigameters = 1e-9,
+    Inches = 39.3701,
+    Feet = 3.28084,
+    Yards = 1.09361,
     Miles = 0.000621371,
-    Feet = 3.28084
+    NauticalMiles = 0.000539957,
+    AstronomicalUnits = 6.68459e-12,
+    LightYears = 1.0570e-16,
+    Parsecs = 3.24078e-17
 }
 
 interface IVelocity {
@@ -159,7 +174,11 @@ enum VelocityUnit {
     MetersPerSecond = 1,
     KilometersPerHour = 3.6,
     MilesPerHour = 2.23694,
-    FeetPerSecond = 3.28084
+    FeetPerSecond = 3.28084,
+    Knots = 1.94384,
+    MachAtSeaLevel = 0.00293858,
+    SpeedOfLight = 3.33564e-9,
+    SpeedOfSoundAtSeaLevel = 0.00291129
 }
 
 interface IAcceleration {
@@ -261,4 +280,4 @@ enum AccelerationUnit {
     FeetPerSecondSquared = 0.3048
 }
 
-export {Position, PositionUnit, Velocity, VelocityUnit, Acceleration, AccelerationUnit}
+export { Position, PositionUnit, Velocity, VelocityUnit, Acceleration, AccelerationUnit }
