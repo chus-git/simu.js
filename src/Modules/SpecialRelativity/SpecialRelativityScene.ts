@@ -20,10 +20,6 @@ class SpecialRelativityScene extends Scene {
         this._objects.push(object);
     }
 
-    update(time: number) {
-        super.update(time);
-    }
-
 }
 
 export { SpecialRelativityScene };

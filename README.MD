@@ -1,5 +1,7 @@
 # simu.js
 
+[![NPM version](https://img.shields.io/npm/v/simu.svg?style=flat)](https://www.npmjs.com/package/simu) [![NPM monthly downloads](https://img.shields.io/npm/dm/simu.svg?style=flat)](https://npmjs.org/package/simu) [![NPM total downloads](https://img.shields.io/npm/dt/simu.svg?style=flat)](https://npmjs.org/package/simu)
+
 #### JavaScript physics simulation library
 
 This library provides a logic engine that allows you to represent physics simulations where objects interact in a 1D, 2D, or 3D space over time. It can be implemented in any web library or framework.
