@@ -51,7 +51,7 @@ class KinematicsObject extends SceneObject {
 
     update(time: number): boolean {
 
-        if(!super.update(time)) return false;
+        if (!super.update(time)) return false;
 
         let currentPosition: Matrix = this._actualPosition.vector;
         let currentVelocity: Matrix = this._initialVelocity.vector;
@@ -130,14 +130,15 @@ class KinematicsObject extends SceneObject {
         this.calculateAccelerationIntervals();
     }
 
-    removeAcceleration(index: number) {
+    removeAcceleration(acceleration: Acceleration) {
 
-        if (index > -1 && index < this._accelerations.length) {
+        const index = this._accelerations.indexOf(acceleration);
+
+        if (index > -1) {
             this._accelerations.splice(index, 1);
-            this.calculateAccelerationIntervals();
-        } else {
-            console.error(`Invalid index: ${index}. Cannot remove acceleration.`);
         }
+
+        this.calculateAccelerationIntervals();
 
     }
 
