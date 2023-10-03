@@ -14,5 +14,10 @@ export { SpecialRelativityScene } from './Modules/SpecialRelativity/SpecialRelat
 export { SpecialRelativityObject } from './Modules/SpecialRelativity/SpecialRelativityObject';
 export * as SpecialRelativityUtils from './Modules/SpecialRelativity/SpecialRelativityUtils';
 
+export { GravitySimulation } from './Modules/Gravity/GravitySimulation';
+export { GravityScene } from './Modules/Gravity/GravityScene';
+export { GravityObject } from './Modules/Gravity/GravityObject';
+export * from './Modules/Gravity/GravityUtils';
+
 export * from './constants';
 export * from './utils';

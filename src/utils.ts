@@ -45,7 +45,7 @@ class Position {
     }
 
     get vector() {
-        return this._vector;
+        return this._vector.clone();
     }
 
     /** Setters */
@@ -141,7 +141,7 @@ class Velocity {
     }
 
     get vector() {
-        return this._vector;
+        return this._vector.clone();
     }
 
     /** Setters */
@@ -235,7 +235,7 @@ class Acceleration {
     }
 
     get vector() {
-        return this._vector;
+        return this._vector.clone();
     }
 
     /** Setters */

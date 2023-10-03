@@ -19,26 +19,18 @@ class SceneObject {
     // Actual object position
     protected _actualPosition: Position;
 
-    // Last time update
-    protected _lastTimeUpdate: number;
-
     constructor(data: Partial<ISceneObject> = {}) {
 
         this._name = "New object";
         this._initialPosition = new Position();
         this._actualPosition = new Position();
-        this._lastTimeUpdate = 0;
 
         Object.assign(this, data);
     }
 
-    update(time: number): boolean {
+    update(time: number) {
 
-        if (time === this._lastTimeUpdate) return false;
 
-        this._lastTimeUpdate = time;
-
-        return true;
 
     }
 

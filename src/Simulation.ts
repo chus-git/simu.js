@@ -113,15 +113,33 @@ class Simulation {
             // Add the calculated time difference from the last time update
             let time = this.time + (deltaTime / 1000);
 
+
+
             // Return to the beginning of the simulation if it is playing in a loop
-            if (this.inLoop && time >= this.duration) {
-                time -= this.duration;
+            if (this._playbackSpeed > 0 && this._inLoop && time >= this._duration) {
+                time -= this._duration;
+                console.log(1)
+            }
+
+            // Return to the end of the simulation if it is playing in a loop
+            else if (this._playbackSpeed < 0 && this._inLoop && time <= 0) {
+                time += this._duration;
+                console.log(2)
             }
 
             // Pause the simulation if it has reached the set duration
-            else if (this.state === SimulationState.Play && time >= this.duration) {
+            else if (this._playbackSpeed > 0 && this._state === SimulationState.Play && time >= this._duration) {
                 time = this._duration;
                 this.pause();
+                console.log(3)
+            }
+
+            else if (this._playbackSpeed < 0 && this._state === SimulationState.Play && time <= 0) {
+                time = 0;
+                this.pause();
+                console.log(4)
+            } else {
+                console.log(0)
             }
 
             this.time = time;
@@ -152,9 +170,12 @@ class Simulation {
     /** Setters */
 
     set time(time: number) {
+
         if (time > this._duration) this._time = this._duration;
+        else if (time < 0) this._time = 0;
         else this._time = time;
         this.update();
+
     }
 
     set duration(duration: number) {

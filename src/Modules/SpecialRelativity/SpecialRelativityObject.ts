@@ -33,15 +33,11 @@ class SpecialRelativityObject extends SceneObject {
 
     }
 
-    update(time: number): boolean {
-
-        if (!super.update(time)) return false;
+    update(time: number) {
 
         this._actualPosition.vector = calculatePosition(this._initialPosition.vector, this._velocity.vector, time);
         this._properTime = calculateTimeDilation(Number(norm(this._velocity.vector)), time);
         this._lorentzFactor = calculateLorentzFactor(Number(norm(this._velocity.vector)));
-
-        return true;
 
     }
 

@@ -5,9 +5,13 @@ class Scene {
     // Simulation objects
     protected _objects: SceneObject[];
 
+    protected lastTimeUpdate: number;
+
     constructor(data: Partial<Scene> = {}) {
 
         this._objects = [];
+
+        this.lastTimeUpdate = 0;
 
         Object.assign(this, data);
     }

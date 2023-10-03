@@ -49,9 +49,7 @@ class KinematicsObject extends SceneObject {
      * which the object is subjected.
     */
 
-    update(time: number): boolean {
-
-        if (!super.update(time)) return false;
+    update(time: number) {
 
         let currentPosition: Matrix = this._actualPosition.vector;
         let currentVelocity: Matrix = this._initialVelocity.vector;
@@ -74,8 +72,6 @@ class KinematicsObject extends SceneObject {
         this._actualPosition.vector = currentPosition;
         this._actualVelocity.vector = currentVelocity;
         this._actualAcceleration.vector = currentAcceleration;
-
-        return true;
 
     }
 

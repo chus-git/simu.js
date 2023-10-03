@@ -1,5 +1,8 @@
+import { Matrix, add } from "mathjs";
 import { SceneObject, ISceneObject } from "../../SceneObject";
-import { Velocity, Acceleration } from "../../utils";
+import { Velocity, Acceleration, Position } from "../../utils";
+import { calculateGravityAcceleration, calculateGravityForce } from "./GravityUtils";
+import { calculatePosition } from "../Kinematics/KinematicsUtils";
 
 export interface IGravityObject extends ISceneObject {
     _initialVelocity: Velocity,
@@ -11,11 +14,11 @@ class GravityObject extends SceneObject {
     // Initial velocity vector
     private _initialVelocity: Velocity;
 
-    // Actual velocity vector
-    private _actualVelocity: Velocity;
-
     // Mass in kilograms
     private _mass: number;
+
+    // Actual velocity vector
+    private _actualVelocity: Velocity;
 
     // Actual acceleration vector
     private _actualAcceleration: Acceleration;
@@ -25,27 +28,18 @@ class GravityObject extends SceneObject {
         super(data);
 
         this._initialVelocity = new Velocity();
-        this._actualVelocity = new Velocity();
         this._mass = 1;
+
+        this._actualVelocity = new Velocity();
         this._actualAcceleration = new Acceleration();
 
         Object.assign(this, data);
 
     }
 
-    /**
-     * Calculate the position, velocity and acceleration on the indicated time.
-     * It will be necessary to pay attention to the acceleration intervals to
-     * which the object is subjected.
-    */
+    update(time: number) {
 
-    update(time: number): boolean {
 
-        if(!super.update(time)) return false;
-
-        // Los calculos se podrian hacer aqui
-
-        return true;
 
     }
 
