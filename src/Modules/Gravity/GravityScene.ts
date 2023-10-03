@@ -10,7 +10,7 @@ class GravityScene extends Scene {
 
     protected _objects: GravityObject[];
 
-    private cachedStates: GravityCachedState[];
+    private cachedStates: GravityCachedScene[];
 
     constructor(data: Partial<GravityScene> = {}) {
 
@@ -29,6 +29,12 @@ class GravityScene extends Scene {
     }
 
     update(time: number) {
+
+        const step = (step: number) => {
+
+
+
+        }
 
         const iterate = (dt: number, step: number = 0.01) => {
 
@@ -99,30 +105,56 @@ class GravityScene extends Scene {
 
 }
 
-class GravityCachedState {
+class GravityCachedScene {
 
     time: number;
-    objects: {
-        mass: number,
-        position: Matrix,
-        velocity: Matrix
-    }[]
+    objects: GravityCachedObject[];
 
-    constructor(data: Partial<GravityCachedState> = {}) {
+    constructor(time: number, scene: GravityScene) {
 
-        this.time = 0;
+        this.time = time;
         this.objects = [];
 
-        Object.assign(this, data);
+        scene.objects.forEach((object: GravityObject) => {
+            this.objects.push({
+                mass: object.mass,
+                position: object.actualPosition.vector,
+                velocity: object.actualVelocity.vector,
+                acceleration: object.actualAcceleration.vector
+            });
+        });
 
     }
 
     next(dt: number) {
 
+        // Calculate all objects acceleration on each step
+        this.objects.forEach((object1: GravityCachedObject) => {
+            let acceleration = new Acceleration();
+            this.objects.forEach((object2: GravityCachedObject) => {
+                if (object1 !== object2) {
+                    const a = calculateGravityAcceleration(object2.mass, subtract(object1.position, object2.position));
+                    acceleration.vector = add(acceleration.vector, a);
+                }
+            });
+            object1.acceleration = acceleration.vector;
+        });
 
+        // Update position and velocity with calculated acceleration
+        this.objects.forEach((object: GravityCachedObject) => {
+            object.position = calculatePosition(object.position, object.velocity, dt, object.acceleration);
+            object.velocity = calculateVelocity(object.velocity, dt, object.acceleration);
+        })
 
     }
 
+}
+
+interface GravityCachedObject {
+    mass: number,
+    position: Matrix,
+    velocity: Matrix,
+    acceleration: Matrix
 }
 
 export { GravityScene };

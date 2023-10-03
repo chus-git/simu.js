@@ -1,4 +1,5 @@
 import {SceneObject, ISceneObject } from "./SceneObject";
+import { GravityObject, GravityScene } from "./simu";
 
 class Scene {
 
