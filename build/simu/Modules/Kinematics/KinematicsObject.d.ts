@@ -25,7 +25,7 @@ declare class KinematicsObject extends SceneObject {
      */
     calculateAccelerationIntervals(): void;
     addAcceleration(acceleration: Acceleration): void;
-    removeAcceleration(index: number): void;
+    removeAcceleration(acceleration: Acceleration): void;
     /** Getters */
     get actualVelocity(): Velocity;
     get actualAcceleration(): Acceleration;

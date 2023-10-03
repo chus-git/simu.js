@@ -74,14 +74,12 @@ class KinematicsObject extends SceneObject {
         this._accelerations.push(acceleration);
         this.calculateAccelerationIntervals();
     }
-    removeAcceleration(index) {
-        if (index > -1 && index < this._accelerations.length) {
+    removeAcceleration(acceleration) {
+        const index = this._accelerations.indexOf(acceleration);
+        if (index > -1) {
             this._accelerations.splice(index, 1);
-            this.calculateAccelerationIntervals();
         }
-        else {
-            console.error(`Invalid index: ${index}. Cannot remove acceleration.`);
-        }
+        this.calculateAccelerationIntervals();
     }
     /** Getters */
     get actualVelocity() {

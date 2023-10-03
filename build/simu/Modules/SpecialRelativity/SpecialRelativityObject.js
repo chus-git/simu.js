@@ -1,6 +1,7 @@
 import { SceneObject } from "../../SceneObject";
+import { norm, subtract } from 'mathjs';
 import { Velocity } from "../../utils";
-import { calculateTimeDilation } from "./SpecialRelativityUtils";
+import { calculateLorentzFactor, calculateTimeDilation } from "./SpecialRelativityUtils";
 import { calculatePosition } from "../Kinematics/KinematicsUtils";
 class SpecialRelativityObject extends SceneObject {
     constructor(data = {}) {
@@ -12,7 +13,21 @@ class SpecialRelativityObject extends SceneObject {
     }
     update(time) {
         this._actualPosition.vector = calculatePosition(this._initialPosition.vector, this._velocity.vector, time);
-        this._properTime = calculateTimeDilation(this._velocity.vector, time);
+        this._properTime = calculateTimeDilation(Number(norm(this._velocity.vector)), time);
+        this._lorentzFactor = calculateLorentzFactor(Number(norm(this._velocity.vector)));
+    }
+    calculateRelativisticProperties(otherObject) {
+        // Relative velocity between this and other object
+        const vRelative = subtract(otherObject.velocity.vector, this._velocity.vector);
+        // Relative time between this and other object
+        const tRelative = calculateTimeDilation(Number(norm(vRelative)), otherObject.properTime);
+        // Relative lorentz factor bewteen this and other object
+        const lorentzFactor = calculateLorentzFactor(Number(norm(vRelative)));
+        return {
+            vRelative: vRelative,
+            tRelative: tRelative,
+            lorentzFactor: lorentzFactor
+        };
     }
     /** Getters */
     get properTime() {

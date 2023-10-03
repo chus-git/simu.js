@@ -1,6 +1,7 @@
 class Scene {
     constructor(data = {}) {
         this._objects = [];
+        this.lastTimeUpdate = 0;
         Object.assign(this, data);
     }
     update(time) {

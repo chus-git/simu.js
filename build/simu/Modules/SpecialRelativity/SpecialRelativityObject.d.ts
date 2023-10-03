@@ -12,6 +12,7 @@ declare class SpecialRelativityObject extends SceneObject {
     private _lorentzFactor;
     constructor(data?: Partial<ISpecialRelativityObject>);
     update(time: number): void;
+    calculateRelativisticProperties(otherObject: SpecialRelativityObject): RelativeProperties;
     /** Getters */
     get properTime(): number;
     get actualPosition(): Position;
@@ -20,5 +21,10 @@ declare class SpecialRelativityObject extends SceneObject {
     set properTime(time: number);
     set actualPosition(position: Position);
     set velocity(velocity: Velocity);
+}
+interface RelativeProperties {
+    vRelative: Matrix;
+    tRelative: number;
+    lorentzFactor: number;
 }
 export { SpecialRelativityObject };

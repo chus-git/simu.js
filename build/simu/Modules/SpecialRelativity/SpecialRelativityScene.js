@@ -8,8 +8,5 @@ class SpecialRelativityScene extends Scene {
     addObject(object) {
         this._objects.push(object);
     }
-    update(time) {
-        super.update(time);
-    }
 }
 export { SpecialRelativityScene };

@@ -21,7 +21,7 @@ class Position {
         return this._z;
     }
     get vector() {
-        return this._vector;
+        return this._vector.clone();
     }
     /** Setters */
     set x(value) {
@@ -45,10 +45,25 @@ class Position {
 }
 var PositionUnit;
 (function (PositionUnit) {
+    PositionUnit[PositionUnit["Nanometers"] = 1000000000] = "Nanometers";
+    PositionUnit[PositionUnit["Micrometers"] = 1000000] = "Micrometers";
+    PositionUnit[PositionUnit["Millimeters"] = 1000] = "Millimeters";
+    PositionUnit[PositionUnit["Centimeters"] = 100] = "Centimeters";
+    PositionUnit[PositionUnit["Decimeters"] = 10] = "Decimeters";
     PositionUnit[PositionUnit["Meters"] = 1] = "Meters";
+    PositionUnit[PositionUnit["Dekameters"] = 0.1] = "Dekameters";
+    PositionUnit[PositionUnit["Hectometers"] = 0.01] = "Hectometers";
     PositionUnit[PositionUnit["Kilometers"] = 0.001] = "Kilometers";
-    PositionUnit[PositionUnit["Miles"] = 0.000621371] = "Miles";
+    PositionUnit[PositionUnit["Megameters"] = 0.000001] = "Megameters";
+    PositionUnit[PositionUnit["Gigameters"] = 1e-9] = "Gigameters";
+    PositionUnit[PositionUnit["Inches"] = 39.3701] = "Inches";
     PositionUnit[PositionUnit["Feet"] = 3.28084] = "Feet";
+    PositionUnit[PositionUnit["Yards"] = 1.09361] = "Yards";
+    PositionUnit[PositionUnit["Miles"] = 0.000621371] = "Miles";
+    PositionUnit[PositionUnit["NauticalMiles"] = 0.000539957] = "NauticalMiles";
+    PositionUnit[PositionUnit["AstronomicalUnits"] = 6.68459e-12] = "AstronomicalUnits";
+    PositionUnit[PositionUnit["LightYears"] = 1.057e-16] = "LightYears";
+    PositionUnit[PositionUnit["Parsecs"] = 3.24078e-17] = "Parsecs";
 })(PositionUnit || (PositionUnit = {}));
 class Velocity {
     constructor(data = {}) {
@@ -72,7 +87,7 @@ class Velocity {
         return this._z;
     }
     get vector() {
-        return this._vector;
+        return this._vector.clone();
     }
     /** Setters */
     set x(value) {
@@ -100,11 +115,15 @@ var VelocityUnit;
     VelocityUnit[VelocityUnit["KilometersPerHour"] = 3.6] = "KilometersPerHour";
     VelocityUnit[VelocityUnit["MilesPerHour"] = 2.23694] = "MilesPerHour";
     VelocityUnit[VelocityUnit["FeetPerSecond"] = 3.28084] = "FeetPerSecond";
+    VelocityUnit[VelocityUnit["Knots"] = 1.94384] = "Knots";
+    VelocityUnit[VelocityUnit["MachAtSeaLevel"] = 0.00293858] = "MachAtSeaLevel";
+    VelocityUnit[VelocityUnit["SpeedOfLight"] = 3.33564e-9] = "SpeedOfLight";
+    VelocityUnit[VelocityUnit["SpeedOfSoundAtSeaLevel"] = 0.00291129] = "SpeedOfSoundAtSeaLevel";
 })(VelocityUnit || (VelocityUnit = {}));
 class Acceleration {
     constructor(data = {}) {
         this._startAt = 0;
-        this._duration = 1;
+        this._duration = Number.MAX_VALUE;
         this._x = 0;
         this._y = 0;
         this._z = 0;
@@ -128,7 +147,7 @@ class Acceleration {
         return this._z;
     }
     get vector() {
-        return this._vector;
+        return this._vector.clone();
     }
     /** Setters */
     set startAt(startAt) {

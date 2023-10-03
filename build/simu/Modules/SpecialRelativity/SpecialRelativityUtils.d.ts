@@ -1,3 +1,3 @@
-import { Matrix } from "mathjs";
-declare const calculateTimeDilation: (v0: Matrix, t: number) => number;
-export { calculateTimeDilation };
+declare const calculateTimeDilation: (v: number, t: number) => number;
+declare const calculateLorentzFactor: (v: number) => number;
+export { calculateTimeDilation, calculateLorentzFactor };

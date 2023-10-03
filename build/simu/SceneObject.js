@@ -2,7 +2,6 @@ import { Position } from "./utils";
 class SceneObject {
     constructor(data = {}) {
         this._name = "New object";
-        this._icon = "default.png";
         this._initialPosition = new Position();
         this._actualPosition = new Position();
         Object.assign(this, data);
@@ -13,9 +12,6 @@ class SceneObject {
     get name() {
         return this._name;
     }
-    get icon() {
-        return this._icon;
-    }
     get initialPosition() {
         return this._initialPosition;
     }
@@ -25,9 +21,6 @@ class SceneObject {
     /** Setters */
     set name(name) {
         this._name = name;
-    }
-    set icon(icon) {
-        this._icon = icon;
     }
     set initialPosition(position) {
         this._initialPosition = position;

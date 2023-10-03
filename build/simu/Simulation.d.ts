@@ -61,7 +61,4 @@ declare class Simulation {
     get state(): SimulationState;
     get scene(): Scene;
 }
-export declare enum VelocityUnit {
-    MetersPerSecond = 0
-}
 export { Simulation, SimulationState };

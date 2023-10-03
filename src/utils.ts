@@ -199,7 +199,7 @@ class Acceleration {
 
     private _startAt: number = 0;
 
-    private _duration: number = 1;
+    private _duration: number = Number.MAX_VALUE;
 
     constructor(data: Partial<IAcceleration> = {}) {
 

@@ -23,10 +23,25 @@ declare class Position {
     set vector(value: Matrix);
 }
 declare enum PositionUnit {
+    Nanometers = 1000000000,
+    Micrometers = 1000000,
+    Millimeters = 1000,
+    Centimeters = 100,
+    Decimeters = 10,
     Meters = 1,
+    Dekameters = 0.1,
+    Hectometers = 0.01,
     Kilometers = 0.001,
+    Megameters = 0.000001,
+    Gigameters = 1e-9,
+    Inches = 39.3701,
+    Feet = 3.28084,
+    Yards = 1.09361,
     Miles = 0.000621371,
-    Feet = 3.28084
+    NauticalMiles = 0.000539957,
+    AstronomicalUnits = 6.68459e-12,
+    LightYears = 1.057e-16,
+    Parsecs = 3.24078e-17
 }
 interface IVelocity {
     _x: number;
@@ -55,7 +70,11 @@ declare enum VelocityUnit {
     MetersPerSecond = 1,
     KilometersPerHour = 3.6,
     MilesPerHour = 2.23694,
-    FeetPerSecond = 3.28084
+    FeetPerSecond = 3.28084,
+    Knots = 1.94384,
+    MachAtSeaLevel = 0.00293858,
+    SpeedOfLight = 3.33564e-9,
+    SpeedOfSoundAtSeaLevel = 0.00291129
 }
 interface IAcceleration {
     _x: number;
