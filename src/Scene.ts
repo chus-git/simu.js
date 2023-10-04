@@ -17,14 +17,23 @@ class Scene {
         Object.assign(this, data);
     }
 
-    update(time: number) {
-        this._objects.forEach((object: SceneObject) => {
-            object.update(time);
-        });
+    update(time: number): boolean {
+
+        if(this.lastTimeUpdate === time) return false;
+
+        return true;
+
     }
 
     addObject(object: SceneObject) {
         this._objects.push(object);
+    }
+
+    removeObject(object: SceneObject) {
+        const index = this._objects.indexOf(object);
+        if (index > -1) {
+            this._objects.splice(index, 1);
+        }
     }
 
     get objects() {

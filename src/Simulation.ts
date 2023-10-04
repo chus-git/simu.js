@@ -1,5 +1,6 @@
 import { Scene } from "./Scene";
 import EventEmitter from "./EventEmitter";
+import { GravityScene } from "./simu";
 
 enum SimulationState {
     Pause = 'pause',
@@ -118,31 +119,29 @@ class Simulation {
             // Return to the beginning of the simulation if it is playing in a loop
             if (this._playbackSpeed > 0 && this._inLoop && time >= this._duration) {
                 time -= this._duration;
-                console.log(1)
+                //console.log(1)
             }
 
             // Return to the end of the simulation if it is playing in a loop
             else if (this._playbackSpeed < 0 && this._inLoop && time <= 0) {
                 time += this._duration;
-                console.log(2)
+                //console.log(2)
             }
 
             // Pause the simulation if it has reached the set duration
             else if (this._playbackSpeed > 0 && this._state === SimulationState.Play && time >= this._duration) {
                 time = this._duration;
                 this.pause();
-                console.log(3)
+                //console.log(3)
             }
 
             else if (this._playbackSpeed < 0 && this._state === SimulationState.Play && time <= 0) {
                 time = 0;
                 this.pause();
-                console.log(4)
-            } else {
-                console.log(0)
+                //console.log(4)
             }
 
-            this.time = time;
+            this._time = time;
 
             this.update();
 
