@@ -1,9 +1,9 @@
-import { Matrix, add, distance, norm, subtract } from "mathjs";
+import { Matrix, add, subtract } from "mathjs";
 import { Scene } from "../../Scene";
-import { Acceleration, Position, Velocity } from "../../utils";
-import { GravityObject, IGravityObject } from "./GravityObject";
-import { G, MAX_GRAVITY_SIMULATION_DURATION } from "../../constants";
-import { calculateGravityAcceleration, calculateGravityForce } from "./GravityUtils";
+import { Acceleration } from "../../utils";
+import { GravityObject } from "./GravityObject";
+import { MAX_GRAVITY_SIMULATION_DURATION } from "../../constants";
+import { calculateGravityAcceleration } from "./GravityUtils";
 import { calculatePosition, calculateVelocity } from "../Kinematics/KinematicsUtils";
 
 class GravityScene extends Scene {
@@ -41,23 +41,52 @@ class GravityScene extends Scene {
         if (!super.update(time)) return false;
         if (this.cachedStates.length === 0) return false;
 
-        const closestState = this.cachedStates.reduce((prev, curr) => {
-            return (Math.abs(curr.time - time) < Math.abs(prev.time - time) ? curr : prev);
-        }).clone();
+        const deltaTime = time - this.lastTimeUpdate;
 
-        //console.log(`Estado cacheado más cercano a ${time}: ${closestState.time}. Objetos: `, closestState.objects);
+        let state;
 
-        closestState.stepTo(time, 0.01);
+        if (Math.abs(deltaTime) > 1) {
+            return false;
+        }
 
-        //console.log(`Se ha dado un paso de 0.2, objetos actualizados: `,closestState.objects)
+        // If only necessary do one step
+        else if (Math.abs(deltaTime) < 0.5) {
 
-        this.loadCachedScene(closestState);
+            state = new GravityCachedScene({
+                time: this.lastTimeUpdate,
+                objects: this._objects.map((object: GravityObject) => {
+                    const result = {
+                        mass: object.mass,
+                        position: object.position.vector.clone(),
+                        velocity: object.velocity.vector.clone(),
+                        acceleration: object.actualAcceleration.vector.clone()
+                    }
+                    return result;
+                })
+            })
+
+            state.stepTo(time);
+
+        }
+
+        // If necessary do more than one step
+        else {
+            state = this.cachedStates.reduce((prev, curr) => {
+                return (Math.abs(curr.time - time) < Math.abs(prev.time - time) ? curr : prev);
+            }).clone();
+
+            state.stepTo(time, Math.min(Math.abs(time - this.lastTimeUpdate), 1 / 60));
+        }
+
+        this.loadCachedScene(state);
+
+        this.lastTimeUpdate = time;
 
         return true;
 
     }
 
-    async updateCachedScenes(to: number = MAX_GRAVITY_SIMULATION_DURATION, step: number = 0.01, cacheEach: number = 1) {
+    updateCachedScenes(to: number = MAX_GRAVITY_SIMULATION_DURATION, step: number = 0.01, cacheEach: number = 1) {
 
         if (this.updatingCachedScenes) {
             console.warn("There is an active cached scenes update!");
@@ -69,37 +98,35 @@ class GravityScene extends Scene {
         // Clear cached states
         this.cachedStates = [];
 
+        let cachedStates = [];
+
+        let objects: GravityCachedObject[] = [];
+
+        this._objects.forEach(o => {
+            const object = {
+                mass: o.mass,
+                position: o.initialPosition.vector.clone(),
+                velocity: o.initialVelocity.vector.clone(),
+                acceleration: o.actualAcceleration.vector.clone()
+            }
+            objects.push(object);
+        });
+
         // Prepare the cached 
         const cachedState: GravityCachedScene = new GravityCachedScene({
             time: 0,
-            objects: this._objects.map((object) => {
-                const result = {
-                    mass: object.mass,
-                    position: object.initialPosition.vector,
-                    velocity: object.initialVelocity.vector,
-                    acceleration: object.actualAcceleration.vector
-                }
-                return result;
-            })
+            objects: objects
         });
 
-        for (let i = 0; i <= to; i+=cacheEach) {
+        for (let i = 0; i <= to; i += cacheEach) {
             cachedState.stepTo(i, step);
-            //console.log(`La posicion del objeto en el instante ${cachedState.time} es de ${cachedState.objects[1].position.get([0]).toFixed(2)}`)
-            this.cachedStates.push(cachedState.clone());
+            cachedStates.push(cachedState.clone());
+            console.log(`Updating cached states... ${(i / to * 100).toFixed(1)}`)
         }
 
+        this.cachedStates = cachedStates;
+
         console.log(`${this.cachedStates.length} estados cacheados: `, this.cachedStates)
-
-        /*for (let i = 0; i < to / step; i++) {
-
-            if (Number.isInteger(i * step)) {
-                this.cachedStates.push(cachedState.clone());
-            }
-
-            cachedState.step(step);
-
-        }*/
 
         this.updatingCachedScenes = false;
 
@@ -108,9 +135,9 @@ class GravityScene extends Scene {
     loadCachedScene(scene: GravityCachedScene) {
 
         this._objects.forEach((object: GravityObject, index: number) => {
-            object.actualPosition.vector = scene.objects[index].position;
-            object.actualVelocity.vector = scene.objects[index].velocity;
-            object.actualAcceleration.vector = scene.objects[index].acceleration;
+            object.position.vector = scene.objects[index].position.clone();
+            object.velocity.vector = scene.objects[index].velocity.clone();
+            object.actualAcceleration.vector = scene.objects[index].acceleration.clone();
         })
 
     }
@@ -138,11 +165,13 @@ class GravityCachedScene {
             let acceleration = new Acceleration();
             this.objects.forEach((object2: GravityCachedObject) => {
                 if (object1 !== object2) {
-                    const a = calculateGravityAcceleration(object2.mass, subtract(object1.position, object2.position));
+                    const distance = subtract(object2.position, object1.position);
+                    const a = calculateGravityAcceleration(object2.mass, distance);
+                    //console.log("Acceleration: " + acceleration.vector.toArray() + " Position 1: " + object2.position.toArray() + " Position 2: " + object1.position.toArray() + " Mass: " + object2.mass)
                     acceleration.vector = add(acceleration.vector, a);
                 }
             });
-            object1.acceleration = acceleration.vector;
+            object1.acceleration = acceleration.vector.clone();
         });
 
         // Update position and velocity with calculated acceleration

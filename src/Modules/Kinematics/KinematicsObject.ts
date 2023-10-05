@@ -6,7 +6,7 @@ import { Velocity, Acceleration } from "../../utils";
 export interface IKinematicsObject extends ISceneObject {
     _initialVelocity: Velocity,
     _accelerations: Acceleration[],
-    _actualVelocity: Velocity,
+    _velocity: Velocity,
     _actualAcceleration: Acceleration
 }
 
@@ -16,7 +16,7 @@ class KinematicsObject extends SceneObject {
     private _initialVelocity: Velocity;
 
     // Actual velocity
-    private _actualVelocity: Velocity;
+    private _velocity: Velocity;
 
     // Accelerations over time
     private _accelerations: Acceleration[] = [];
@@ -32,7 +32,7 @@ class KinematicsObject extends SceneObject {
         super(data);
 
         this._initialVelocity = new Velocity();
-        this._actualVelocity = new Velocity();
+        this._velocity = new Velocity();
         this._accelerations = [];
         this._actualAcceleration = new Acceleration();
         this._accelerationIntervals = [];
@@ -51,7 +51,7 @@ class KinematicsObject extends SceneObject {
 
     update(time: number) {
 
-        let currentPosition: Matrix = this._actualPosition.vector;
+        let currentPosition: Matrix = this._position.vector;
         let currentVelocity: Matrix = this._initialVelocity.vector;
         let currentAcceleration: Matrix = matrix([0, 0, 0]);
 
@@ -69,8 +69,8 @@ class KinematicsObject extends SceneObject {
 
         });
 
-        this._actualPosition.vector = currentPosition;
-        this._actualVelocity.vector = currentVelocity;
+        this._position.vector = currentPosition;
+        this._velocity.vector = currentVelocity;
         this._actualAcceleration.vector = currentAcceleration;
 
     }
@@ -140,8 +140,8 @@ class KinematicsObject extends SceneObject {
 
     /** Getters */
 
-    get actualVelocity(): Velocity {
-        return this._actualVelocity;
+    get velocity(): Velocity {
+        return this._velocity;
     }
 
     get actualAcceleration(): Acceleration {

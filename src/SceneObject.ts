@@ -5,7 +5,7 @@ export interface ISceneObject {
     _name: string,
     _icon: string,
     _initialPosition: Position,
-    _actualPosition: Position
+    _position: Position
 }
 
 class SceneObject {
@@ -17,15 +17,18 @@ class SceneObject {
     protected _initialPosition: Position;
 
     // Actual object position
-    protected _actualPosition: Position;
+    protected _position: Position;
 
     constructor(data: Partial<ISceneObject> = {}) {
 
         this._name = "New object";
         this._initialPosition = new Position();
-        this._actualPosition = new Position();
 
         Object.assign(this, data);
+
+        this._position = new Position();
+        this._position.vector = this._initialPosition.vector.clone();
+
     }
 
     update(time: number) {
@@ -44,8 +47,8 @@ class SceneObject {
         return this._initialPosition;
     }
 
-    get actualPosition(): Position {
-        return this._actualPosition;
+    get position(): Position {
+        return this._position;
     }
 
     /** Setters */

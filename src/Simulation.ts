@@ -112,38 +112,32 @@ class Simulation {
             lastTime = currentTime;
 
             // Add the calculated time difference from the last time update
-            let time = this.time + (deltaTime / 1000);
-
-
+            let time = this._time + (deltaTime / 1000);
 
             // Return to the beginning of the simulation if it is playing in a loop
             if (this._playbackSpeed > 0 && this._inLoop && time >= this._duration) {
                 time -= this._duration;
-                //console.log(1)
             }
 
             // Return to the end of the simulation if it is playing in a loop
             else if (this._playbackSpeed < 0 && this._inLoop && time <= 0) {
                 time += this._duration;
-                //console.log(2)
             }
 
             // Pause the simulation if it has reached the set duration
             else if (this._playbackSpeed > 0 && this._state === SimulationState.Play && time >= this._duration) {
                 time = this._duration;
                 this.pause();
-                //console.log(3)
             }
 
             else if (this._playbackSpeed < 0 && this._state === SimulationState.Play && time <= 0) {
                 time = 0;
                 this.pause();
-                //console.log(4)
             }
 
             this._time = time;
 
-            this.update();
+            this.update(this._time);
 
             // Continue with the loop if simulation is playing
             if (this.state === SimulationState.Play) {
@@ -161,8 +155,8 @@ class Simulation {
      * simulation time
      */
 
-    update() {
-        this._scene.update(this._time);
+    update(time: number = this._time) {
+        this._scene.update(time);
         this.updateEventEmmitter.emit(this._time);
     }
 
@@ -179,7 +173,7 @@ class Simulation {
 
     set duration(duration: number) {
         this._duration = duration;
-        this.update();
+        //this.update();
     }
 
     set inLoop(inLoop: boolean) {
@@ -196,7 +190,7 @@ class Simulation {
 
     set scene(scene: Scene) {
         this._scene = scene;
-        this.update();
+        //this.update();
     }
 
     /** Getters */

@@ -35,7 +35,7 @@ class SpecialRelativityObject extends SceneObject {
 
     update(time: number) {
 
-        this._actualPosition.vector = calculatePosition(this._initialPosition.vector, this._velocity.vector, time);
+        this._position.vector = calculatePosition(this._initialPosition.vector, this._velocity.vector, time);
         this._properTime = calculateTimeDilation(Number(norm(this._velocity.vector)), time);
         this._lorentzFactor = calculateLorentzFactor(Number(norm(this._velocity.vector)));
 
@@ -66,8 +66,8 @@ class SpecialRelativityObject extends SceneObject {
         return this._properTime;
     }
 
-    get actualPosition(): Position {
-        return this._actualPosition;
+    get position(): Position {
+        return this._position;
     }
 
     get velocity(): Velocity {
@@ -80,8 +80,8 @@ class SpecialRelativityObject extends SceneObject {
         this._properTime = time;
     }
 
-    set actualPosition(position: Position) {
-        this._actualPosition = position;
+    set position(position: Position) {
+        this._position = position;
     }
 
     set velocity(velocity: Velocity) {

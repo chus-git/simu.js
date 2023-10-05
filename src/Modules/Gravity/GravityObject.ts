@@ -18,7 +18,7 @@ class GravityObject extends SceneObject {
     private _mass: number;
 
     // Actual velocity vector
-    private _actualVelocity: Velocity;
+    private _velocity: Velocity;
 
     // Actual acceleration vector
     private _actualAcceleration: Acceleration;
@@ -29,11 +29,12 @@ class GravityObject extends SceneObject {
 
         this._initialVelocity = new Velocity();
         this._mass = 1;
-
-        this._actualVelocity = new Velocity();
         this._actualAcceleration = new Acceleration();
-
+        
         Object.assign(this, data);
+
+        this._velocity = new Velocity();
+        this._velocity.vector = this._initialVelocity.vector.clone();
 
     }
 
@@ -45,8 +46,8 @@ class GravityObject extends SceneObject {
 
     /** Getters */
 
-    get actualVelocity(): Velocity {
-        return this._actualVelocity;
+    get velocity(): Velocity {
+        return this._velocity;
     }
 
     get actualAcceleration(): Acceleration {

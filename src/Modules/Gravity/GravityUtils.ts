@@ -1,4 +1,4 @@
-import { Matrix, divide, subtract } from "mathjs";
+import { Matrix, divide, multiply, norm, subtract } from "mathjs";
 import { G } from "../../constants"
 
 const calculateGravityForce = (m1: number, m2: number, x1: Matrix, x2: Matrix): Matrix => {
@@ -9,7 +9,9 @@ const calculateGravityForce = (m1: number, m2: number, x1: Matrix, x2: Matrix): 
 }
 
 const calculateGravityAcceleration = (m: number, r: Matrix): Matrix => {
-    const a = r.map((r: number) => r !== 0 ? (G * m) / (r ** 2) : 0);
+    const rNorm: number = Number(norm(r));
+    const unitVector: Matrix = divide(r, rNorm) as Matrix;
+    const a: Matrix = multiply((G * m) / (Math.pow(rNorm, 2)), unitVector) as Matrix;
     return a;
 }
 
