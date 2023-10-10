@@ -10,7 +10,7 @@ declare class Position {
     private _z;
     private _vector;
     constructor(data?: Partial<IPosition>);
-    asArray(): number[];
+    asArray(): import("mathjs").MathArray;
     /** Getters */
     get x(): number;
     get y(): number;
@@ -54,7 +54,7 @@ declare class Velocity {
     private _z;
     private _vector;
     constructor(data?: Partial<IVelocity>);
-    asArray(): number[];
+    asArray(): import("mathjs").MathArray;
     /** Getters */
     get x(): number;
     get y(): number;

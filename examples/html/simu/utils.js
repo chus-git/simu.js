@@ -8,7 +8,7 @@ class Position {
         this._vector = matrix([this._x, this._y, this._z]);
     }
     asArray() {
-        return [this.x, this.y, this.z];
+        return this._vector.toArray();
     }
     /** Getters */
     get x() {
@@ -74,7 +74,7 @@ class Velocity {
         this._vector = matrix([this._x, this._y, this._z]);
     }
     asArray() {
-        return [this.x, this.y, this.z];
+        return this._vector.toArray();
     }
     /** Getters */
     get x() {

@@ -26,8 +26,8 @@ class Position {
 
     }
 
-    asArray() {
-        return this._vector.toArray();
+    asArray(): number[] {
+        return [this.x, this.y, this.z];
     }
 
     /** Getters */
@@ -122,8 +122,8 @@ class Velocity {
 
     }
 
-    asArray() {
-        return this._vector.toArray();
+    asArray(): number[] {
+        return [this.x, this.y, this.z];
     }
 
     /** Getters */
