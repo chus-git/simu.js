@@ -1,40 +1,37 @@
-import { Matrix, add } from "mathjs";
 import { SceneObject, ISceneObject } from "../../SceneObject";
-import { Velocity, Acceleration, Position } from "../../utils";
-import { calculateGravityAcceleration, calculateGravityForce } from "./GravityUtils";
-import { calculatePosition } from "../Kinematics/KinematicsUtils";
+import { Vector } from "../../utils";
 
 export interface IGravityObject extends ISceneObject {
-    _initialVelocity: Velocity,
+    _initialVelocity: Vector,
     _mass: number
 }
 
 class GravityObject extends SceneObject {
 
     // Initial velocity vector
-    private _initialVelocity: Velocity;
+    private _initialVelocity: Vector;
 
     // Mass in kilograms
     private _mass: number;
 
     // Actual velocity vector
-    private _velocity: Velocity;
+    private _velocity: Vector;
 
     // Actual acceleration vector
-    private _actualAcceleration: Acceleration;
+    private _actualAcceleration: Vector;
 
     constructor(data: Partial<IGravityObject> = {}) {
 
         super(data);
 
-        this._initialVelocity = new Velocity();
+        this._initialVelocity = new Vector();
         this._mass = 1;
-        this._actualAcceleration = new Acceleration();
-        
+        this._actualAcceleration = new Vector();
+
         Object.assign(this, data);
 
-        this._velocity = new Velocity();
-        this._velocity.vector = this._initialVelocity.vector.clone();
+        this._velocity = new Vector();
+        this._velocity = this._initialVelocity.clone();
 
     }
 
@@ -46,15 +43,15 @@ class GravityObject extends SceneObject {
 
     /** Getters */
 
-    get velocity(): Velocity {
+    get velocity(): Vector {
         return this._velocity;
     }
 
-    get actualAcceleration(): Acceleration {
+    get actualAcceleration(): Vector {
         return this._actualAcceleration;
     }
 
-    get initialVelocity(): Velocity {
+    get initialVelocity(): Vector {
         return this._initialVelocity;
     }
 
@@ -64,10 +61,10 @@ class GravityObject extends SceneObject {
 
     /** Setters */
 
-    set initialVelocity(initialVelocity: Velocity) {
+    set initialVelocity(initialVelocity: Vector) {
         this._initialVelocity = initialVelocity;
     }
 
 }
 
-export { GravityObject };
+export default GravityObject;

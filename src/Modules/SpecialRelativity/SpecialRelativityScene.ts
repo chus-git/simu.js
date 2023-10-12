@@ -1,5 +1,5 @@
 import { Scene } from "../../Scene";
-import { SpecialRelativityObject, ISpecialRelativityObject} from "./SpecialRelativityObject";
+import SpecialRelativityObject from "./SpecialRelativityObject";
 import { matrix } from "mathjs";
 
 class SpecialRelativityScene extends Scene {
@@ -13,13 +13,13 @@ class SpecialRelativityScene extends Scene {
         this._objects = [];
 
         Object.assign(this, data);
-        
+
     }
 
-    addObject(object: SpecialRelativityObject): void {
+    add(object: SpecialRelativityObject): void {
         this._objects.push(object);
     }
 
 }
 
-export { SpecialRelativityScene };
+export default SpecialRelativityScene;

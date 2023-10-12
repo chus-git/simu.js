@@ -1,11 +1,11 @@
 import { SceneObject, ISceneObject } from "../../SceneObject";
-import { Matrix, norm, subtract } from 'mathjs';
-import { Position, Velocity } from "../../utils";
+import { norm, subtract } from 'mathjs';
+import { Position, Vector } from "../../utils";
 import { calculateLorentzFactor, calculateTimeDilation } from "./SpecialRelativityUtils";
-import { calculatePosition, calculateVelocity } from "../Kinematics/KinematicsUtils";
+import { calculatePosition } from "../Kinematics/KinematicsUtils";
 
 export interface ISpecialRelativityObject extends ISceneObject {
-    _velocity: Matrix,
+    _velocity: number[],
     _properTime: number,
     _lorentzFactor: number
 }
@@ -13,7 +13,7 @@ export interface ISpecialRelativityObject extends ISceneObject {
 class SpecialRelativityObject extends SceneObject {
 
     // Initial velocity vector
-    private _velocity: Velocity;
+    private _velocity: Vector;
 
     // Proper time
     private _properTime: number;
@@ -25,7 +25,7 @@ class SpecialRelativityObject extends SceneObject {
 
         super(data);
 
-        this._velocity = new Velocity();
+        this._velocity = new Vector();
         this._properTime = 0;
         this._lorentzFactor = 1;
 
@@ -44,7 +44,7 @@ class SpecialRelativityObject extends SceneObject {
     calculateRelativisticProperties(otherObject: SpecialRelativityObject): RelativeProperties {
 
         // Relative velocity between this and other object
-        const vRelative: Matrix = subtract(otherObject.velocity.vector, this._velocity.vector);
+        const vRelative: number[] = subtract(otherObject.velocity.vector, this._velocity.vector);
 
         // Relative time between this and other object
         const tRelative: number = calculateTimeDilation(Number(norm(vRelative)), otherObject.properTime);
@@ -66,11 +66,11 @@ class SpecialRelativityObject extends SceneObject {
         return this._properTime;
     }
 
-    get position(): Position {
+    get position(): Vector {
         return this._position;
     }
 
-    get velocity(): Velocity {
+    get velocity(): Vector {
         return this._velocity;
     }
 
@@ -80,20 +80,20 @@ class SpecialRelativityObject extends SceneObject {
         this._properTime = time;
     }
 
-    set position(position: Position) {
+    set position(position: Vector) {
         this._position = position;
     }
 
-    set velocity(velocity: Velocity) {
+    set velocity(velocity: Vector) {
         this._velocity = velocity;
     }
 
 }
 
 interface RelativeProperties {
-    vRelative: Matrix,
+    vRelative: number[],
     tRelative: number,
     lorentzFactor: number
 }
 
-export { SpecialRelativityObject };
+export default SpecialRelativityObject;

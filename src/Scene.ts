@@ -1,10 +1,9 @@
-import {SceneObject, ISceneObject } from "./SceneObject";
-import { GravityObject, GravityScene } from "./simu";
+import { SceneObject } from "./SceneObject";
 
 class Scene {
 
     // Simulation objects
-    protected _objects: SceneObject[];
+    protected _objects: Object[];
 
     protected lastTimeUpdate: number;
 
@@ -25,7 +24,7 @@ class Scene {
 
     }
 
-    addObject(object: SceneObject) {
+    add(object: SceneObject) {
         this._objects.push(object);
     }
 
@@ -40,7 +39,7 @@ class Scene {
         return this._objects;
     }
 
-    set objects(objects: SceneObject[]) {
+    set objects(objects: Object[]) {
         this._objects = objects;
     }
 
