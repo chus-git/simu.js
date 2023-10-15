@@ -1,6 +1,6 @@
 import { Scene } from "../../Scene";
 import { Acceleration } from "../../utils";
-import { KinematicsObject, IKinematicsObject } from "./KinematicsObject";
+import KinematicsObject from "./KinematicsObject";
 
 class KinematicsScene extends Scene {
 
@@ -19,7 +19,19 @@ class KinematicsScene extends Scene {
 
     }
 
-    addObject(object: KinematicsObject) {
+    update(time: number): boolean {
+
+        if (!super.update(time)) return false;
+
+        this._objects.forEach((object: KinematicsObject) => {
+            object.update(time);
+        })
+        
+        return true;
+
+    }
+
+    add(object: KinematicsObject) {
 
         this._objects.push(object);
 
@@ -55,4 +67,4 @@ class KinematicsScene extends Scene {
 
 }
 
-export { KinematicsScene };
+export default KinematicsScene;

@@ -1,75 +1,91 @@
-import { Matrix, matrix } from "mathjs";
+class Vector {
 
-interface IPosition {
-    _x: number,
-    _y: number,
-    _z: number
+    private _vector: number[];
+
+    constructor(x: number = 0, y: number = 0, z: number = 0) {
+        this._vector = [x, y, z];
+    }
+
+    clone() {
+        return new Vector(this.x, this.y, this.z);
+    }
+
+    get x() {
+        return this._vector[0];
+    }
+
+    get y() {
+        return this._vector[1];
+    }
+
+    get z() {
+        return this._vector[2];
+    }
+
+    get vector() {
+        return this._vector;
+    }
+
+    set x(x: number) {
+        this._vector[0] = x;
+    }
+
+    set y(y: number) {
+        this._vector[1] = y;
+    }
+
+    set z(z: number) {
+        this._vector[2] = z;
+    }
+
+    set vector(vector: number[]) {
+        this._vector = vector;
+    }
+
 }
 
 class Position {
 
-    private _x: number;
-    private _y: number;
-    private _z: number;
+    private _vector: Vector;
 
-    private _vector: Matrix;
-
-    constructor(data: Partial<IPosition> = {}) {
-
-        this._x = 0;
-        this._y = 0;
-        this._z = 0;
-
-        Object.assign(this, data);
-
-        this._vector = matrix([this._x, this._y, this._z]);
-
-    }
-
-    asArray(): number[] {
-        return [this.x, this.y, this.z];
+    constructor(x: number = 0, y: number = 0, z: number = 0) {
+        this._vector = new Vector(x, y, z);
     }
 
     /** Getters */
 
     get x() {
-        return this._x;
+        return this._vector.x;
     }
 
     get y() {
-        return this._y;
+        return this._vector.y;
     }
 
     get z() {
-        return this._z;
+        return this._vector.z;
     }
 
-    get vector() {
-        return this._vector.clone();
+    get vector(): Vector {
+        return this._vector;
     }
 
     /** Setters */
 
-    set x(value: number) {
-        this._x = value;
-        this._vector.set([0], value);
+    set x(x: number) {
+        this._vector.x = x;
     }
 
-    set y(value: number) {
-        this._y = value
-        this._vector.set([1], value);
+    set y(y: number) {
+        this._vector.y = y;
     }
 
-    set z(value: number) {
-        this._z = value;
-        this._vector.set([2], value);
+    set z(z: number) {
+        this._vector.z = z;
     }
 
-    set vector(value: Matrix) {
-        this._vector = value;
-        this._x = value.get([0]);
-        this._y = value.get([1]);
-        this._z = value.get([2]);
+    set vector(vector: Vector) {
+        this._vector = vector.clone();
     }
 
 }
@@ -96,76 +112,48 @@ enum PositionUnit {
     Parsecs = 3.24078e-17
 }
 
-interface IVelocity {
-    _x: number,
-    _y: number,
-    _z: number
-}
-
 class Velocity {
 
-    private _x: number;
-    private _y: number;
-    private _z: number;
+    private _vector: Vector;
 
-    private _vector: Matrix;
-
-    constructor(data: Partial<IVelocity> = {}) {
-
-        this._x = 0;
-        this._y = 0;
-        this._z = 0;
-
-        Object.assign(this, data);
-
-        this._vector = matrix([this._x, this._y, this._z]);
-
-    }
-
-    asArray(): number[] {
-        return [this.x, this.y, this.z];
+    constructor(x: number = 0, y: number = 0, z: number = 0) {
+        this._vector = new Vector(x, y, z);
     }
 
     /** Getters */
 
     get x() {
-        return this._x;
+        return this._vector.x;
     }
 
     get y() {
-        return this._y;
+        return this._vector.y;
     }
 
     get z() {
-        return this._z;
+        return this._vector.z;
     }
 
-    get vector() {
-        return this._vector.clone();
+    get vector(): Vector {
+        return this._vector;
     }
 
     /** Setters */
 
-    set x(value: number) {
-        this._x = value;
-        this._vector.set([0], value);
+    set x(x: number) {
+        this._vector.x = x;
     }
 
-    set y(value: number) {
-        this._y = value
-        this._vector.set([1], value);
+    set y(y: number) {
+        this._vector.y = y;
     }
 
-    set z(value: number) {
-        this._z = value;
-        this._vector.set([2], value);
+    set z(z: number) {
+        this._vector.z = z;
     }
 
-    set vector(value: Matrix) {
-        this._vector = value;
-        this._x = value.get([0]);
-        this._y = value.get([1]);
-        this._z = value.get([2]);
+    set vector(vector: Vector) {
+        this._vector = vector.clone();
     }
 
 }
@@ -182,20 +170,14 @@ enum VelocityUnit {
 }
 
 interface IAcceleration {
-    _x: number,
-    _y: number,
-    _z: number,
+    _vector: Vector,
     _startAt: number;
     _duration: number;
 }
 
 class Acceleration {
 
-    private _x: number;
-    private _y: number;
-    private _z: number;
-
-    private _vector: Matrix;
+    private _vector: Vector;
 
     private _startAt: number = 0;
 
@@ -203,10 +185,7 @@ class Acceleration {
 
     constructor(data: Partial<IAcceleration> = {}) {
 
-        this._x = 0;
-        this._y = 0;
-        this._z = 0;
-        this._vector = matrix([0, 0, 0]);
+        this._vector = new Vector();
 
         Object.assign(this, data);
 
@@ -223,19 +202,19 @@ class Acceleration {
     }
 
     get x() {
-        return this._x;
+        return this._vector.x;
     }
 
     get y() {
-        return this._y;
+        return this._vector.y;
     }
 
     get z() {
-        return this._z;
+        return this._vector.z;
     }
 
     get vector() {
-        return this._vector.clone();
+        return this._vector;
     }
 
     /** Setters */
@@ -248,28 +227,21 @@ class Acceleration {
         this._duration = duration;
     }
 
-    set x(value: number) {
-        this._x = value;
-        this._vector.set([0], value);
+    set x(x: number) {
+        this._vector.x = x;
     }
 
-    set y(value: number) {
-        this._y = value
-        this._vector.set([1], value);
+    set y(y: number) {
+        this._vector.y = y;
     }
 
-    set z(value: number) {
-        this._z = value;
-        this._vector.set([2], value);
+    set z(z: number) {
+        this._vector.z = z;
     }
 
-    set vector(value: Matrix) {
-        this._vector = value;
-        this._x = value.get([0]);
-        this._y = value.get([1]);
-        this._z = value.get([2]);
+    set vector(vector: Vector) {
+        this._vector = vector;
     }
-
 
 }
 
@@ -280,4 +252,4 @@ enum AccelerationUnit {
     FeetPerSecondSquared = 0.3048
 }
 
-export { Position, PositionUnit, Velocity, VelocityUnit, Acceleration, AccelerationUnit }
+export { Vector, Position, PositionUnit, Velocity, VelocityUnit, Acceleration, AccelerationUnit }

@@ -1,10 +1,15 @@
 import { Scene } from "./Scene";
 import EventEmitter from "./EventEmitter";
-import { GravityScene } from "./simu";
 
 enum SimulationState {
     Pause = 'pause',
     Play = 'play'
+}
+
+export interface ISimulation {
+    _duration: number,
+    _inLoop: boolean,
+    _playbackSpeed: number
 }
 
 class Simulation {
@@ -30,7 +35,7 @@ class Simulation {
     // On update event emmiter
     public updateEventEmmitter: EventEmitter<number>;
 
-    constructor(data: Partial<Simulation> = {}) {
+    constructor(data: Partial<ISimulation> = {}) {
 
         this._time = 0;
         this._duration = Number.MAX_VALUE;
@@ -51,7 +56,7 @@ class Simulation {
     reset() {
         this.time = 0;
         this.duration = Number.MAX_VALUE;
-        this.state = SimulationState.Pause;
+        this._state = SimulationState.Pause;
     }
 
     /**
@@ -62,11 +67,11 @@ class Simulation {
 
     play() {
 
-        if (this.state === SimulationState.Play || this.time >= this.duration) {
+        if (this._state === SimulationState.Play || this.time >= this.duration) {
             return;
         }
 
-        this.state = SimulationState.Play;
+        this._state = SimulationState.Play;
 
         this.resumeTimeLoop();
 
@@ -78,7 +83,7 @@ class Simulation {
      */
 
     pause() {
-        this.state = SimulationState.Pause;
+        this._state = SimulationState.Pause;
     }
 
     /**
@@ -140,7 +145,7 @@ class Simulation {
             this.update(this._time);
 
             // Continue with the loop if simulation is playing
-            if (this.state === SimulationState.Play) {
+            if (this._state === SimulationState.Play) {
                 requestAnimationFrame(timeLoop);
             }
 
@@ -158,6 +163,10 @@ class Simulation {
     update(time: number = this._time) {
         this._scene.update(time);
         this.updateEventEmmitter.emit(this._time);
+    }
+
+    loadScene(scene: Scene) {
+        this._scene = scene;
     }
 
     /** Setters */
@@ -184,15 +193,6 @@ class Simulation {
         this._playbackSpeed = playbackSpeed;
     }
 
-    set state(state: SimulationState) {
-        this._state = state;
-    }
-
-    set scene(scene: Scene) {
-        this._scene = scene;
-        //this.update();
-    }
-
     /** Getters */
 
     get time() {
@@ -213,10 +213,6 @@ class Simulation {
 
     get state() {
         return this._state;
-    }
-
-    get scene() {
-        return this._scene;
     }
 
 }

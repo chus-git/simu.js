@@ -1,7 +1,7 @@
 import { Matrix, add, subtract } from "mathjs";
 import { Scene } from "../../Scene";
-import { Acceleration } from "../../utils";
-import { GravityObject } from "./GravityObject";
+import { Vector } from "../../utils";
+import GravityObject from "./GravityObject";
 import { MAX_GRAVITY_SIMULATION_DURATION } from "../../constants";
 import { calculateGravityAcceleration } from "./GravityUtils";
 import { calculatePosition, calculateVelocity } from "../Kinematics/KinematicsUtils";
@@ -28,8 +28,8 @@ class GravityScene extends Scene {
 
     }
 
-    addObject(object: GravityObject) {
-        super.addObject(object);
+    add(object: GravityObject) {
+        super.add(object);
     }
 
     removeObject(object: GravityObject) {
@@ -55,9 +55,9 @@ class GravityScene extends Scene {
                 objects: this._objects.map((object: GravityObject) => {
                     const result = {
                         mass: object.mass,
-                        position: object.position.vector.clone(),
-                        velocity: object.velocity.vector.clone(),
-                        acceleration: object.actualAcceleration.vector.clone()
+                        position: object.position.clone(),
+                        velocity: object.velocity.clone(),
+                        acceleration: object.actualAcceleration.clone()
                     }
                     return result;
                 })
@@ -116,9 +116,9 @@ class GravityScene extends Scene {
         const objects: GravityCachedObject[] = this._objects.map((object: GravityObject) => {
             const result = {
                 mass: object.mass,
-                position: object.position.vector.clone(),
-                velocity: object.velocity.vector.clone(),
-                acceleration: object.actualAcceleration.vector.clone()
+                position: object.position.clone(),
+                velocity: object.velocity.clone(),
+                acceleration: object.actualAcceleration.clone()
             }
             return result;
         });
@@ -140,9 +140,9 @@ class GravityScene extends Scene {
                 console.log("HOSTIAAAA la hemos liao", scene)
                 return;
             }
-            object.position.vector = scene.objects[index].position.clone();
-            object.velocity.vector = scene.objects[index].velocity.clone();
-            object.actualAcceleration.vector = scene.objects[index].acceleration.clone();
+            object.position.vector = scene.objects[index].position.clone().vector;
+            object.velocity.vector = scene.objects[index].velocity.clone().vector;
+            object.actualAcceleration.vector = scene.objects[index].acceleration.clone().vector;
         })
 
     }
@@ -167,22 +167,21 @@ class GravityCachedScene {
 
         // Calculate all objects acceleration on each step
         this.objects.forEach((object1: GravityCachedObject) => {
-            let acceleration = new Acceleration();
+            let acceleration = new Vector();
             this.objects.forEach((object2: GravityCachedObject) => {
                 if (object1 !== object2) {
-                    const distance = subtract(object2.position, object1.position);
+                    const distance = subtract(object2.position.vector, object1.position.vector);
                     const a = calculateGravityAcceleration(object2.mass, distance);
-                    //console.log("Acceleration: " + acceleration.vector.toArray() + " Position 1: " + object2.position.toArray() + " Position 2: " + object1.position.toArray() + " Mass: " + object2.mass)
                     acceleration.vector = add(acceleration.vector, a);
                 }
             });
-            object1.acceleration = acceleration.vector.clone();
+            object1.acceleration = acceleration.clone();
         });
 
         // Update position and velocity with calculated acceleration
         this.objects.forEach((object: GravityCachedObject) => {
-            object.position = calculatePosition(object.position, object.velocity, dt, object.acceleration);
-            object.velocity = calculateVelocity(object.velocity, dt, object.acceleration);
+            object.position.vector = calculatePosition(object.position.vector, object.velocity.vector, dt, object.acceleration.vector);
+            object.velocity.vector = calculateVelocity(object.velocity.vector, dt, object.acceleration.vector);
         })
 
         this.time += dt;
@@ -223,9 +222,9 @@ class GravityCachedScene {
 
 interface GravityCachedObject {
     mass: number,
-    position: Matrix,
-    velocity: Matrix,
-    acceleration: Matrix
+    position: Vector,
+    velocity: Vector,
+    acceleration: Vector
 }
 
-export { GravityScene };
+export default GravityScene;
