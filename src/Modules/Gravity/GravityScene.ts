@@ -86,6 +86,21 @@ class GravityScene extends Scene {
 
     updateCachedScenes(to: number = MAX_GRAVITY_SIMULATION_DURATION, step: number = 0.01, cacheEach: number = 1) {
 
+        const each = (cachedState: GravityCachedScene, i: number = 0) => {
+
+            if (i <= to) {
+                cachedState.stepTo(i, step);
+                cachedStates.push(cachedState.clone());
+                console.log(`Updating cached states... ${(i / to * 100).toFixed(1)}`)
+                setTimeout(() => each(cachedState, i + cacheEach), 1);
+            } else {
+                this.cachedStates = cachedStates;
+                console.log(`${this.cachedStates.length} estados cacheados: `, this.cachedStates)
+                this.updatingCachedScenes = false;
+            }
+
+        }
+
         if (this.updatingCachedScenes) {
             console.warn("There is an active cached scenes update!");
             return;
@@ -96,7 +111,7 @@ class GravityScene extends Scene {
         // Clear cached states
         this.cachedStates = [];
 
-        let cachedStates = [];
+        let cachedStates: GravityCachedScene[] = [];
 
         const objects: GravityCachedObject[] = this._objects.map((object: GravityObject) => {
             const result = {
@@ -114,17 +129,7 @@ class GravityScene extends Scene {
             objects: objects
         });
 
-        for (let i = 0; i <= to; i += cacheEach) {
-            cachedState.stepTo(i, step);
-            cachedStates.push(cachedState.clone());
-            console.log(`Updating cached states... ${(i / to * 100).toFixed(1)}`)
-        }
-
-        this.cachedStates = cachedStates;
-
-        console.log(`${this.cachedStates.length} estados cacheados: `, this.cachedStates)
-
-        this.updatingCachedScenes = false;
+        each(cachedState);
 
     }
 
