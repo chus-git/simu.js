@@ -44,52 +44,6 @@ class Vector {
 
 }
 
-class Position {
-
-    private _vector: Vector;
-
-    constructor(x: number = 0, y: number = 0, z: number = 0) {
-        this._vector = new Vector(x, y, z);
-    }
-
-    /** Getters */
-
-    get x() {
-        return this._vector.x;
-    }
-
-    get y() {
-        return this._vector.y;
-    }
-
-    get z() {
-        return this._vector.z;
-    }
-
-    get vector(): Vector {
-        return this._vector;
-    }
-
-    /** Setters */
-
-    set x(x: number) {
-        this._vector.x = x;
-    }
-
-    set y(y: number) {
-        this._vector.y = y;
-    }
-
-    set z(z: number) {
-        this._vector.z = z;
-    }
-
-    set vector(vector: Vector) {
-        this._vector = vector.clone();
-    }
-
-}
-
 enum PositionUnit {
     Nanometers = 1e+9,
     Micrometers = 1e+6,
@@ -107,55 +61,10 @@ enum PositionUnit {
     Yards = 1.09361,
     Miles = 0.000621371,
     NauticalMiles = 0.000539957,
+    LightSeconds = 3.33564e-9,
     AstronomicalUnits = 6.68459e-12,
     LightYears = 1.0570e-16,
-    Parsecs = 3.24078e-17
-}
-
-class Velocity {
-
-    private _vector: Vector;
-
-    constructor(x: number = 0, y: number = 0, z: number = 0) {
-        this._vector = new Vector(x, y, z);
-    }
-
-    /** Getters */
-
-    get x() {
-        return this._vector.x;
-    }
-
-    get y() {
-        return this._vector.y;
-    }
-
-    get z() {
-        return this._vector.z;
-    }
-
-    get vector(): Vector {
-        return this._vector;
-    }
-
-    /** Setters */
-
-    set x(x: number) {
-        this._vector.x = x;
-    }
-
-    set y(y: number) {
-        this._vector.y = y;
-    }
-
-    set z(z: number) {
-        this._vector.z = z;
-    }
-
-    set vector(vector: Vector) {
-        this._vector = vector.clone();
-    }
-
+    Parsecs = 3.24078e-17,
 }
 
 enum VelocityUnit {
@@ -169,82 +78,6 @@ enum VelocityUnit {
     SpeedOfSoundAtSeaLevel = 0.00291129
 }
 
-interface IAcceleration {
-    _vector: Vector,
-    _startAt: number;
-    _duration: number;
-}
-
-class Acceleration {
-
-    private _vector: Vector;
-
-    private _startAt: number = 0;
-
-    private _duration: number = Number.MAX_VALUE;
-
-    constructor(data: Partial<IAcceleration> = {}) {
-
-        this._vector = new Vector();
-
-        Object.assign(this, data);
-
-    }
-
-    /** Getters */
-
-    get startAt() {
-        return this._startAt;
-    }
-
-    get duration() {
-        return this._duration;
-    }
-
-    get x() {
-        return this._vector.x;
-    }
-
-    get y() {
-        return this._vector.y;
-    }
-
-    get z() {
-        return this._vector.z;
-    }
-
-    get vector() {
-        return this._vector;
-    }
-
-    /** Setters */
-
-    set startAt(startAt: number) {
-        this._startAt = startAt;
-    }
-
-    set duration(duration: number) {
-        this._duration = duration;
-    }
-
-    set x(x: number) {
-        this._vector.x = x;
-    }
-
-    set y(y: number) {
-        this._vector.y = y;
-    }
-
-    set z(z: number) {
-        this._vector.z = z;
-    }
-
-    set vector(vector: Vector) {
-        this._vector = vector;
-    }
-
-}
-
 enum AccelerationUnit {
     MetersPerSecondSquared = 1,
     KilometersPerHourSquared = 0.000277778,
@@ -252,4 +85,8 @@ enum AccelerationUnit {
     FeetPerSecondSquared = 0.3048
 }
 
-export { Vector, Position, PositionUnit, Velocity, VelocityUnit, Acceleration, AccelerationUnit }
+const vector = (x: number = 0, y: number = 0, z: number = 0) => {
+    return new Vector(x, y, z);
+}
+
+export { Vector, vector, PositionUnit, VelocityUnit, AccelerationUnit }

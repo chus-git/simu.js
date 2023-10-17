@@ -5,6 +5,9 @@ var SimulationState;
     SimulationState["Pause"] = "pause";
     SimulationState["Play"] = "play";
 })(SimulationState || (SimulationState = {}));
+/**
+ * Represents a simulation with a time-based scene.
+ */
 class Simulation {
     constructor(data = {}) {
         this._time = 0;
@@ -23,7 +26,7 @@ class Simulation {
     reset() {
         this.time = 0;
         this.duration = Number.MAX_VALUE;
-        this.state = SimulationState.Pause;
+        this._state = SimulationState.Pause;
     }
     /**
      * Plays the simulation.
@@ -31,10 +34,10 @@ class Simulation {
      * Otherwise, it resumes the time loop.
      */
     play() {
-        if (this.state === SimulationState.Play || this.time >= this.duration) {
+        if (this._state === SimulationState.Play || this.time >= this.duration) {
             return;
         }
-        this.state = SimulationState.Play;
+        this._state = SimulationState.Play;
         this.resumeTimeLoop();
     }
     /**
@@ -42,7 +45,7 @@ class Simulation {
      * Clears the time loop and sets the simulation state to Pause.
      */
     pause() {
-        this.state = SimulationState.Pause;
+        this._state = SimulationState.Pause;
     }
     /**
      * Toggles the looping state of the simulation.
@@ -54,8 +57,6 @@ class Simulation {
     }
     /**
      * Resumes the time loop.
-     * This function is responsible for incrementing the
-     * simulation time by 0.001 every millisecond.
      */
     resumeTimeLoop() {
         let lastTime = performance.now();
@@ -86,19 +87,26 @@ class Simulation {
             this._time = time;
             this.update(this._time);
             // Continue with the loop if simulation is playing
-            if (this.state === SimulationState.Play) {
+            if (this._state === SimulationState.Play) {
                 requestAnimationFrame(timeLoop);
             }
         };
         requestAnimationFrame(timeLoop);
     }
     /**
-     * Update the simulation attending to the actual
-     * simulation time
+     * Updates the simulation's scene at the given time.
+     * @param {number} time - The simulation time to update to.
      */
     update(time = this._time) {
         this._scene.update(time);
         this.updateEventEmmitter.emit(this._time);
+    }
+    /**
+     * Loads a new scene for the simulation.
+     * @param {Scene} scene - The scene to load.
+     */
+    loadScene(scene) {
+        this._scene = scene;
     }
     /** Setters */
     set time(time) {
@@ -112,20 +120,12 @@ class Simulation {
     }
     set duration(duration) {
         this._duration = duration;
-        //this.update();
     }
     set inLoop(inLoop) {
         this._inLoop = inLoop;
     }
     set playbackSpeed(playbackSpeed) {
         this._playbackSpeed = playbackSpeed;
-    }
-    set state(state) {
-        this._state = state;
-    }
-    set scene(scene) {
-        this._scene = scene;
-        //this.update();
     }
     /** Getters */
     get time() {
@@ -142,9 +142,6 @@ class Simulation {
     }
     get state() {
         return this._state;
-    }
-    get scene() {
-        return this._scene;
     }
 }
 export { Simulation, SimulationState };

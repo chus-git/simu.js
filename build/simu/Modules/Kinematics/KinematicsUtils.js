@@ -1,6 +1,6 @@
-import { add, matrix, multiply } from "mathjs";
+import { add, multiply } from "mathjs";
 /** Calculate position matrix using MRUA position ecuation => x = x0 + v0 * t + 1/2 * a^2 */
-const calculatePosition = (x0, v0, t, a = matrix([0, 0, 0])) => {
+const calculatePosition = (x0, v0, t, a = [0, 0, 0]) => {
     const x = add(add(x0, multiply(v0, t)), multiply(0.5, multiply(a, Math.pow(t, 2))));
     return x;
 };

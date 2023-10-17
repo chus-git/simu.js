@@ -1,6 +1,6 @@
 import { SceneObject, ISceneObject } from "../../SceneObject";
 import { norm, subtract } from 'mathjs';
-import { Position, Vector } from "../../utils";
+import { Vector } from "../../utils";
 import { calculateLorentzFactor, calculateTimeDilation } from "./SpecialRelativityUtils";
 import { calculatePosition } from "../Kinematics/KinematicsUtils";
 

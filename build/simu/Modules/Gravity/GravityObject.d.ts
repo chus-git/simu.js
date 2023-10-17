@@ -1,7 +1,7 @@
 import { SceneObject, ISceneObject } from "../../SceneObject";
-import { Velocity, Acceleration } from "../../utils";
+import { Vector } from "../../utils";
 export interface IGravityObject extends ISceneObject {
-    _initialVelocity: Velocity;
+    _initialVelocity: Vector;
     _mass: number;
 }
 declare class GravityObject extends SceneObject {
@@ -12,11 +12,11 @@ declare class GravityObject extends SceneObject {
     constructor(data?: Partial<IGravityObject>);
     update(time: number): void;
     /** Getters */
-    get velocity(): Velocity;
-    get actualAcceleration(): Acceleration;
-    get initialVelocity(): Velocity;
+    get velocity(): Vector;
+    get actualAcceleration(): Vector;
+    get initialVelocity(): Vector;
     get mass(): number;
     /** Setters */
-    set initialVelocity(initialVelocity: Velocity);
+    set initialVelocity(initialVelocity: Vector);
 }
-export { GravityObject };
+export default GravityObject;

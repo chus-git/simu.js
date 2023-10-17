@@ -1,16 +1,18 @@
-import { Matrix } from "mathjs";
 import { Scene } from "../../Scene";
-import { GravityObject } from "./GravityObject";
+import { Vector } from "../../utils";
+import GravityObject from "./GravityObject";
 declare class GravityScene extends Scene {
     protected _objects: GravityObject[];
     private cachedStates;
     private updatingCachedScenes;
+    private isCached;
     constructor(data?: Partial<GravityScene>);
-    addObject(object: GravityObject): void;
+    add(object: GravityObject): void;
     removeObject(object: GravityObject): void;
     update(time: number): boolean;
     updateCachedScenes(to?: number, step?: number, cacheEach?: number): void;
     loadCachedScene(scene: GravityCachedScene): void;
+    isAvailable(): boolean;
 }
 declare class GravityCachedScene {
     time: number;
@@ -22,8 +24,8 @@ declare class GravityCachedScene {
 }
 interface GravityCachedObject {
     mass: number;
-    position: Matrix;
-    velocity: Matrix;
-    acceleration: Matrix;
+    position: Vector;
+    velocity: Vector;
+    acceleration: Vector;
 }
-export { GravityScene };
+export default GravityScene;

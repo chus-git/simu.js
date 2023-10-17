@@ -14,15 +14,30 @@ class GravityScene extends Scene {
 
     private updatingCachedScenes: boolean;
 
+    private isCached: boolean;
+
     constructor(data: Partial<GravityScene> = {}) {
 
         super(data);
 
         this._objects = [];
 
-        this.cachedStates = [];
+        this.cachedStates = [new GravityCachedScene({
+            time: this.lastTimeUpdate,
+            objects: this._objects.map((object: GravityObject) => {
+                const result = {
+                    mass: object.mass,
+                    position: object.position.clone(),
+                    velocity: object.velocity.clone(),
+                    acceleration: object.actualAcceleration.clone()
+                }
+                return result;
+            })
+        })];
 
         this.updatingCachedScenes = false;
+
+        this.isCached = false;
 
         Object.assign(this, data);
 
@@ -39,17 +54,19 @@ class GravityScene extends Scene {
     update(time: number): boolean {
 
         if (!super.update(time)) return false;
-        if (this.cachedStates.length === 0) {
-            console.warn("Gravity simulation not cached. Use updateCachedScenes() please.");
-            return false;
-        }
 
         const deltaTime = time - this.lastTimeUpdate;
 
         let state;
 
         // If only necessary do one step
-        if (Math.abs(deltaTime) < 0.5) {
+        if (Math.abs(deltaTime) < 5 || !this.isCached) {
+
+            if (Math.abs(deltaTime) > 5 && !this.isCached) {
+                console.warn("Scene not catched! Performance warning.");
+                return false;
+            }
+
             state = new GravityCachedScene({
                 time: this.lastTimeUpdate,
                 objects: this._objects.map((object: GravityObject) => {
@@ -63,17 +80,19 @@ class GravityScene extends Scene {
                 })
             })
 
-            state.stepTo(time);
+            state.stepTo(time, 0.001);
 
         }
 
         // If necessary do more than one step
         else {
+
             state = this.cachedStates.reduce((prev, curr) => {
                 return (Math.abs(curr.time - time) < Math.abs(prev.time - time) ? curr : prev);
             }).clone();
 
             state.stepTo(time, Math.min(Math.abs(time - this.lastTimeUpdate), 1 / 60));
+
         }
 
         this.loadCachedScene(state);
@@ -137,7 +156,7 @@ class GravityScene extends Scene {
 
         this._objects.forEach((object: GravityObject, index: number) => {
             if (scene.objects[index] === undefined) {
-                console.log("HOSTIAAAA la hemos liao", scene)
+                console.error("Not objects on cached scene", scene)
                 return;
             }
             object.position.vector = scene.objects[index].position.clone().vector;
@@ -145,6 +164,10 @@ class GravityScene extends Scene {
             object.actualAcceleration.vector = scene.objects[index].acceleration.clone().vector;
         })
 
+    }
+
+    isAvailable() {
+        return this.isCached;
     }
 
 }

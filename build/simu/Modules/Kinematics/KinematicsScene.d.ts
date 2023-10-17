@@ -1,12 +1,21 @@
 import { Scene } from "../../Scene";
-import { Acceleration } from "../../utils";
-import { KinematicsObject } from "./KinematicsObject";
+import { Vector } from "../../utils";
+import KinematicsObject from "./KinematicsObject";
 declare class KinematicsScene extends Scene {
     protected _objects: KinematicsObject[];
     private accelerations;
     constructor(data?: Partial<KinematicsScene>);
-    addObject(object: KinematicsObject): void;
-    addAcceleration(acceleration: Acceleration): void;
-    removeAcceleration(acceleration: Acceleration): void;
+    update(time: number): boolean;
+    add(object: KinematicsObject): void;
+    addAcceleration(acceleration: {
+        startAt: number;
+        duration: number;
+        vector: Vector;
+    }): void;
+    removeAcceleration(acceleration: {
+        startAt: number;
+        duration: number;
+        vector: Vector;
+    }): void;
 }
-export { KinematicsScene };
+export default KinematicsScene;

@@ -1,12 +1,12 @@
 import { Scene } from "../../Scene";
-import { Acceleration } from "../../utils";
+import { Vector } from "../../utils";
 import KinematicsObject from "./KinematicsObject";
 
 class KinematicsScene extends Scene {
 
     protected _objects: KinematicsObject[];
 
-    private accelerations: Acceleration[];
+    private accelerations: { startAt: number, duration: number, vector: Vector }[];
 
     constructor(data: Partial<KinematicsScene> = {}) {
 
@@ -35,13 +35,13 @@ class KinematicsScene extends Scene {
 
         this._objects.push(object);
 
-        this.accelerations.forEach((acceleration: Acceleration) => {
+        this.accelerations.forEach((acceleration) => {
             object.addAcceleration(acceleration);
         });
 
     }
 
-    addAcceleration(acceleration: Acceleration) {
+    addAcceleration(acceleration: { startAt: number, duration: number, vector: Vector }) {
 
         this.accelerations.push(acceleration);
 
@@ -51,7 +51,7 @@ class KinematicsScene extends Scene {
 
     }
 
-    removeAcceleration(acceleration: Acceleration) {
+    removeAcceleration(acceleration: { startAt: number, duration: number, vector: Vector }) {
 
         const index = this.accelerations.indexOf(acceleration);
 

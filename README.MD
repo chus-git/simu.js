@@ -2,51 +2,156 @@
 
 [![NPM version](https://img.shields.io/npm/v/simu.svg?style=flat)](https://www.npmjs.com/package/simu) [![NPM monthly downloads](https://img.shields.io/npm/dm/simu.svg?style=flat)](https://npmjs.org/package/simu) [![NPM total downloads](https://img.shields.io/npm/dt/simu.svg?style=flat)](https://npmjs.org/package/simu)
 
-#### JavaScript physics simulation library
+- [Introduction](#introduction)
+- [Modules](#modules)
+    - [Kinematics](#kinematics)
+    - [Special relativity](#special-relativity)
+- [Simulation](#simulation-1)
 
-This library provides a logic engine that allows you to represent physics simulations where objects interact in a 1D, 2D, or 3D space over time.
+## Introduction
 
-### Usage
+This library offers a robust logic engine for simulating physics within environments of up to three dimensions. It provides a variety of pre-built modules for your convenience.
 
-This code creates a simulation where an object with a position and velocity moves over time in a simulation with a scene prepared for calculations in the field of kinematics. In this case, we will observe the object's position at different moments in time in a two-dimensional space.
+The special feature of this library is that it allows you to determine the state of a scene at any given moment by specifying only its initial properties.
+
+## Modules
+
+You can use different physics modules prepared to be loaded on a [simulation](#simulation). These are the ones currently available:
+
+### Kinematics
+
+The Kinematics module enables you to craft dynamic scenes with the flexibility to introduce accelerations that influence all objects within the scene, such as gravity or air forces, for instance.
+
+```javascript
+import * as SIMU from 'simu';
+
+const kinematicsScene = new SIMU.Kinematics.Scene();
+
+// Permanent acceleration (earth gravity)
+kinematicsScene.addAcceleration({
+    vector: SIMU.vector(0, -9.81);
+});
+
+// Point acceleration that starts at second 2 with 1s duration
+kinematicsScene.addAcceleration({
+    startAt: 2,
+    duration: 1,
+    vector: SIMU.vector(1, 0)
+})
+```
+
+You have the flexibility to create kinematics objects with customizable initial properties such as position and velocity. Additionally, you can seamlessly incorporate accelerations into your object, like a vertical helicopter acceleration.
+
+```javascript
+const helicopter = new SIMU.Kinematics.Object({
+    _name: 'Helicopter',
+    _initialPosition: SIMU.vector(0, 100, 0);
+});
+
+// Add permanent vertical helicopter acceleration
+helicopter.addAcceleration({
+    vector: SIMU.vector(0, 9.81);
+});
+
+kinematicsScene.add(helicopter);
+```
+
+Using this example, you can simulate a helicopter maintaining its altitude while being affected by an airflow starting at the second 2.
+
+```javascript
+for(let i = 0; i <= 5; i++) {
+    scene.update(i);
+    console.log(helicopter.name + " position at second " + i + ": " + helicopter.position.vector)
+}
+```
+
+Output:
+
+```bash
+"Helicopter position at second 0: [0, 10, 0]"
+"Helicopter position at second 1: [0, 10, 0]"
+"Helicopter position at second 2: [0, 10, 0]"
+"Helicopter position at second 3: [1, 10, 0]"
+"Helicopter position at second 4: [2, 10, 0]"
+"Helicopter position at second 5: [3, 10, 0]"
+```
+
+### Special relativity
+
+The Special Relativity module empowers you to construct scenes featuring objects affected by relativistic phenomena, particularly at velocities approaching the speed of light.
+
+```javascript
+import * as SIMU from 'simu';
+
+const rocket = new SIMU.SpecialRelativity.Object({
+    _name: 'Rocket',
+    _velocity: SIMU.vector(SIMU.SPEED_OF_LIGHT * 0.95, 0, 0)
+});
+
+for(let i = 0; i <= 10; i++) {
+    rocket.update(i);
+    console.log("At second " + i + ", Rocket proper time is " + rocket.properTime)
+}
+```
+
+Let's create a scene and add a second object.
+
+```javascript
+const specialRelativityScene = new SIMU.SpecialRelativity.Scene();
+
+const mike = new SIMU.SpecialRelativity.Object({
+    _name: 'Mike',
+    _initialPosition: SIMU.vector(0, 0, 0),
+    _velocity: SIMU.vector(0, 0, 0)
+});
+
+// Set rocket position at 1 light second away from mike
+rocket.initialPosition = SIMU.vector(1/SIMU.PositionUnit.LightSeconds, 1000, 0);
+
+specialRelativityScene.add(rocket);
+specialRelativityScene.add(mike);
+```
+
+Let's observe some relativistic properties of rocket from Mike's perspective:
+
+```javascript
+let properties;
+
+specialRelativityScene.update(60);
+properties = mike.calculateRelativisticProperties(rocket);
+console.log("In one minute, the rocket's time is " + properties.tRelative + " seconds behind Mike's");
+
+specialRelativityScene.update(3600);
+properties = mike.calculateRelativisticProperties(rocket);
+console.log("In one hour, the rocket's time is " + properties.tRelative + " seconds behind Mike's");
+
+specialRelativityScene.update(31536000);
+properties = mike.calculateRelativisticProperties(rocket);
+console.log("In one year, the rocket's time is " + properties.tRelative + " seconds behind Mike's");
+```
+
+## Simulation
+
+A simulation is an instance that enables you to breathe life into the given scene, granting you the ability to manipulate various aspects. This includes functions such as playing, pausing, rewinding, adjusting playback speed, and establishing a maximum duration, among other features.
+
+This is an illustrative example of how to implement a simulation using the kinematics scene as detailed in the [kinematics](#kinematics) module point:
 
 ```javascript
 import * as SIMU from './simu';
 
-const scene = new SIMU.Kinematics.Scene();
-
-const object = new SIMU.Kinematics.Object({
-    _name: 'Funny object',
-    _initialVelocity: new SIMU.Vector(1, 0, 0)
+const simulation = new SIMU.Simulation({
+    duration: 3600,
+    inLoop: true,
+    playbackSpeed: 1
 });
 
-scene.add(object);
+simulation.loadScene(kinematicsScene);
 
-const simulation = new SIMU.Simulation();
+simulation.play();
 
-simulation.loadScene(scene);
-
-for (let i = 0; i <= 10; i++) {
-    simulation.time = i;
-    console.log(object.name + " is at position x=" + object.position.x + "m at second " + simulation.time);
-}
-
-```
-
-If everything went well, you should see the following output
-
-```bash
-"Funny object is at position x=0m at second 0"
-"Funny object is at position x=1m at second 1"
-"Funny object is at position x=2m at second 2"
-"Funny object is at position x=3m at second 3"
-"Funny object is at position x=4m at second 4"
-"Funny object is at position x=5m at second 5"
-"Funny object is at position x=6m at second 6"
-"Funny object is at position x=7m at second 7"
-"Funny object is at position x=8m at second 8"
-"Funny object is at position x=9m at second 9"
-"Funny object is at position x=10m at second 10"
+simulation.updateEventEmmitter.subscribe((time) = {
+    console.log("Helicopter's position at second " + ": " + helicopter.position.vector)
+})
 ```
 
 ### Cloning this repository

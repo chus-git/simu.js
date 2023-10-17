@@ -12,6 +12,10 @@ export interface ISimulation {
     _playbackSpeed: number
 }
 
+/**
+ * Represents a simulation with a time-based scene.
+ */
+
 class Simulation {
 
     // Current simulation time
@@ -100,8 +104,6 @@ class Simulation {
 
     /**
      * Resumes the time loop.
-     * This function is responsible for incrementing the
-     * simulation time by 0.001 every millisecond.
      */
 
     resumeTimeLoop() {
@@ -156,14 +158,19 @@ class Simulation {
     }
 
     /**
-     * Update the simulation attending to the actual
-     * simulation time
+     * Updates the simulation's scene at the given time.
+     * @param {number} time - The simulation time to update to.
      */
 
     update(time: number = this._time) {
         this._scene.update(time);
         this.updateEventEmmitter.emit(this._time);
     }
+
+    /**
+     * Loads a new scene for the simulation.
+     * @param {Scene} scene - The scene to load.
+     */
 
     loadScene(scene: Scene) {
         this._scene = scene;
@@ -172,17 +179,14 @@ class Simulation {
     /** Setters */
 
     set time(time: number) {
-
         if (time > this._duration) this._time = this._duration;
         else if (time < 0) this._time = 0;
         else this._time = time;
         this.update();
-
     }
 
     set duration(duration: number) {
         this._duration = duration;
-        //this.update();
     }
 
     set inLoop(inLoop: boolean) {

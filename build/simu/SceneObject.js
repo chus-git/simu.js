@@ -1,11 +1,11 @@
-import { Position } from "./utils";
+import { Vector } from "./utils";
 class SceneObject {
     constructor(data = {}) {
         this._name = "New object";
-        this._initialPosition = new Position();
+        this._initialPosition = new Vector();
         Object.assign(this, data);
-        this._position = new Position();
-        this._position.vector = this._initialPosition.vector.clone();
+        this._position = new Vector();
+        this._position = this._initialPosition.clone();
     }
     update(time) {
     }

@@ -1,16 +1,13 @@
 import { SceneObject, ISceneObject } from "../../SceneObject";
-import { Velocity, Acceleration } from "../../utils";
+import { Vector } from "../../utils";
 export interface IKinematicsObject extends ISceneObject {
-    _initialVelocity: Velocity;
-    _accelerations: Acceleration[];
-    _velocity: Velocity;
-    _actualAcceleration: Acceleration;
+    _initialVelocity: Vector;
 }
 declare class KinematicsObject extends SceneObject {
     private _initialVelocity;
     private _velocity;
     private _accelerations;
-    private _actualAcceleration;
+    private _acceleration;
     private _accelerationIntervals;
     constructor(data?: Partial<IKinematicsObject>);
     /**
@@ -24,13 +21,21 @@ declare class KinematicsObject extends SceneObject {
      * be called after every this._accelerations variable modification.
      */
     calculateAccelerationIntervals(): void;
-    addAcceleration(acceleration: Acceleration): void;
-    removeAcceleration(acceleration: Acceleration): void;
+    addAcceleration(acceleration: {
+        startAt: number;
+        duration: number;
+        vector: Vector;
+    }): void;
+    removeAcceleration(acceleration: {
+        startAt: number;
+        duration: number;
+        vector: Vector;
+    }): void;
     /** Getters */
-    get velocity(): Velocity;
-    get actualAcceleration(): Acceleration;
+    get velocity(): Vector;
+    get acceleration(): Vector;
     /** Setters */
-    set initialVelocity(initialVelocity: Velocity);
-    get initialVelocity(): Velocity;
+    set initialVelocity(initialVelocity: Vector);
+    get initialVelocity(): Vector;
 }
-export { KinematicsObject };
+export default KinematicsObject;

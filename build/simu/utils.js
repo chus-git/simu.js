@@ -1,46 +1,33 @@
-import { matrix } from "mathjs";
-class Position {
-    constructor(data = {}) {
-        this._x = 0;
-        this._y = 0;
-        this._z = 0;
-        Object.assign(this, data);
-        this._vector = matrix([this._x, this._y, this._z]);
+class Vector {
+    constructor(x = 0, y = 0, z = 0) {
+        this._vector = [x, y, z];
     }
-    asArray() {
-        return [this.x, this.y, this.z];
+    clone() {
+        return new Vector(this.x, this.y, this.z);
     }
-    /** Getters */
     get x() {
-        return this._x;
+        return this._vector[0];
     }
     get y() {
-        return this._y;
+        return this._vector[1];
     }
     get z() {
-        return this._z;
+        return this._vector[2];
     }
     get vector() {
-        return this._vector.clone();
+        return this._vector;
     }
-    /** Setters */
-    set x(value) {
-        this._x = value;
-        this._vector.set([0], value);
+    set x(x) {
+        this._vector[0] = x;
     }
-    set y(value) {
-        this._y = value;
-        this._vector.set([1], value);
+    set y(y) {
+        this._vector[1] = y;
     }
-    set z(value) {
-        this._z = value;
-        this._vector.set([2], value);
+    set z(z) {
+        this._vector[2] = z;
     }
-    set vector(value) {
-        this._vector = value;
-        this._x = value.get([0]);
-        this._y = value.get([1]);
-        this._z = value.get([2]);
+    set vector(vector) {
+        this._vector = vector;
     }
 }
 var PositionUnit;
@@ -61,54 +48,11 @@ var PositionUnit;
     PositionUnit[PositionUnit["Yards"] = 1.09361] = "Yards";
     PositionUnit[PositionUnit["Miles"] = 0.000621371] = "Miles";
     PositionUnit[PositionUnit["NauticalMiles"] = 0.000539957] = "NauticalMiles";
+    PositionUnit[PositionUnit["LightSeconds"] = 3.33564e-9] = "LightSeconds";
     PositionUnit[PositionUnit["AstronomicalUnits"] = 6.68459e-12] = "AstronomicalUnits";
     PositionUnit[PositionUnit["LightYears"] = 1.057e-16] = "LightYears";
     PositionUnit[PositionUnit["Parsecs"] = 3.24078e-17] = "Parsecs";
 })(PositionUnit || (PositionUnit = {}));
-class Velocity {
-    constructor(data = {}) {
-        this._x = 0;
-        this._y = 0;
-        this._z = 0;
-        Object.assign(this, data);
-        this._vector = matrix([this._x, this._y, this._z]);
-    }
-    asArray() {
-        return [this.x, this.y, this.z];
-    }
-    /** Getters */
-    get x() {
-        return this._x;
-    }
-    get y() {
-        return this._y;
-    }
-    get z() {
-        return this._z;
-    }
-    get vector() {
-        return this._vector.clone();
-    }
-    /** Setters */
-    set x(value) {
-        this._x = value;
-        this._vector.set([0], value);
-    }
-    set y(value) {
-        this._y = value;
-        this._vector.set([1], value);
-    }
-    set z(value) {
-        this._z = value;
-        this._vector.set([2], value);
-    }
-    set vector(value) {
-        this._vector = value;
-        this._x = value.get([0]);
-        this._y = value.get([1]);
-        this._z = value.get([2]);
-    }
-}
 var VelocityUnit;
 (function (VelocityUnit) {
     VelocityUnit[VelocityUnit["MetersPerSecond"] = 1] = "MetersPerSecond";
@@ -120,61 +64,6 @@ var VelocityUnit;
     VelocityUnit[VelocityUnit["SpeedOfLight"] = 3.33564e-9] = "SpeedOfLight";
     VelocityUnit[VelocityUnit["SpeedOfSoundAtSeaLevel"] = 0.00291129] = "SpeedOfSoundAtSeaLevel";
 })(VelocityUnit || (VelocityUnit = {}));
-class Acceleration {
-    constructor(data = {}) {
-        this._startAt = 0;
-        this._duration = Number.MAX_VALUE;
-        this._x = 0;
-        this._y = 0;
-        this._z = 0;
-        this._vector = matrix([0, 0, 0]);
-        Object.assign(this, data);
-    }
-    /** Getters */
-    get startAt() {
-        return this._startAt;
-    }
-    get duration() {
-        return this._duration;
-    }
-    get x() {
-        return this._x;
-    }
-    get y() {
-        return this._y;
-    }
-    get z() {
-        return this._z;
-    }
-    get vector() {
-        return this._vector.clone();
-    }
-    /** Setters */
-    set startAt(startAt) {
-        this._startAt = startAt;
-    }
-    set duration(duration) {
-        this._duration = duration;
-    }
-    set x(value) {
-        this._x = value;
-        this._vector.set([0], value);
-    }
-    set y(value) {
-        this._y = value;
-        this._vector.set([1], value);
-    }
-    set z(value) {
-        this._z = value;
-        this._vector.set([2], value);
-    }
-    set vector(value) {
-        this._vector = value;
-        this._x = value.get([0]);
-        this._y = value.get([1]);
-        this._z = value.get([2]);
-    }
-}
 var AccelerationUnit;
 (function (AccelerationUnit) {
     AccelerationUnit[AccelerationUnit["MetersPerSecondSquared"] = 1] = "MetersPerSecondSquared";
@@ -182,4 +71,7 @@ var AccelerationUnit;
     AccelerationUnit[AccelerationUnit["MilesPerHourSquared"] = 0.00044704] = "MilesPerHourSquared";
     AccelerationUnit[AccelerationUnit["FeetPerSecondSquared"] = 0.3048] = "FeetPerSecondSquared";
 })(AccelerationUnit || (AccelerationUnit = {}));
-export { Position, PositionUnit, Velocity, VelocityUnit, Acceleration, AccelerationUnit };
+const vector = (x = 0, y = 0, z = 0) => {
+    return new Vector(x, y, z);
+};
+export { Vector, vector, PositionUnit, VelocityUnit, AccelerationUnit };

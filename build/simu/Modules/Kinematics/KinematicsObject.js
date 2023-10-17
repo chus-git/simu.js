@@ -1,16 +1,16 @@
+import { add } from "mathjs";
 import { SceneObject } from "../../SceneObject";
-import { matrix, add } from 'mathjs';
-import { KinematicsUtils } from "../../simu";
-import { Velocity, Acceleration } from "../../utils";
+import { Vector } from "../../utils";
+import { calculatePosition, calculateVelocity } from "./KinematicsUtils";
 class KinematicsObject extends SceneObject {
     constructor(data = {}) {
         super(data);
         // Accelerations over time
         this._accelerations = [];
-        this._initialVelocity = new Velocity();
-        this._velocity = new Velocity();
+        this._initialVelocity = new Vector();
+        this._velocity = new Vector();
         this._accelerations = [];
-        this._actualAcceleration = new Acceleration();
+        this._acceleration = new Vector();
         this._accelerationIntervals = [];
         Object.assign(this, data);
         this.calculateAccelerationIntervals();
@@ -21,22 +21,22 @@ class KinematicsObject extends SceneObject {
      * which the object is subjected.
     */
     update(time) {
-        let currentPosition = this._position.vector;
-        let currentVelocity = this._initialVelocity.vector;
-        let currentAcceleration = matrix([0, 0, 0]);
+        let currentPosition = this._initialPosition.clone();
+        let currentVelocity = this._initialVelocity.clone();
+        let currentAcceleration = new Vector();
         this._accelerationIntervals.forEach((accelerationInterval) => {
             if (accelerationInterval.startAt <= time) {
                 const intervalDuration = accelerationInterval.endAt < time ? accelerationInterval.duration : time - accelerationInterval.startAt;
-                currentPosition = KinematicsUtils.calculatePosition(currentPosition, currentVelocity, intervalDuration, accelerationInterval.vector);
-                currentVelocity = KinematicsUtils.calculateVelocity(currentVelocity, intervalDuration, accelerationInterval.vector);
+                currentPosition.vector = calculatePosition(currentPosition.vector, currentVelocity.vector, intervalDuration, accelerationInterval.vector.vector);
+                currentVelocity.vector = calculateVelocity(currentVelocity.vector, intervalDuration, accelerationInterval.vector.vector);
             }
             if (accelerationInterval.startAt <= time && accelerationInterval.endAt >= time) {
-                currentAcceleration = accelerationInterval.vector;
+                currentAcceleration.vector = accelerationInterval.vector.vector;
             }
         });
-        this._position.vector = currentPosition;
-        this._velocity.vector = currentVelocity;
-        this._actualAcceleration.vector = currentAcceleration;
+        this._position = currentPosition;
+        this._velocity = currentVelocity;
+        this._acceleration = currentAcceleration;
     }
     /**
      * Calculate acceleration intervals based on all provided accelerations. This must
@@ -60,11 +60,11 @@ class KinematicsObject extends SceneObject {
                 startAt: points[i - 1],
                 endAt: points[i],
                 duration: points[i] - points[i - 1],
-                vector: matrix([0, 0, 0])
+                vector: new Vector()
             };
             this._accelerations.forEach((acceleration) => {
                 if (accelerationInterval.startAt >= acceleration.startAt && accelerationInterval.endAt <= acceleration.startAt + acceleration.duration) {
-                    accelerationInterval.vector = add(accelerationInterval.vector, acceleration.vector);
+                    accelerationInterval.vector.vector = add(accelerationInterval.vector.vector, acceleration.vector.vector);
                 }
             });
             this._accelerationIntervals.push(accelerationInterval);
@@ -85,8 +85,8 @@ class KinematicsObject extends SceneObject {
     get velocity() {
         return this._velocity;
     }
-    get actualAcceleration() {
-        return this._actualAcceleration;
+    get acceleration() {
+        return this._acceleration;
     }
     /** Setters */
     set initialVelocity(initialVelocity) {
@@ -96,4 +96,4 @@ class KinematicsObject extends SceneObject {
         return this._initialVelocity;
     }
 }
-export { KinematicsObject };
+export default KinematicsObject;

@@ -5,8 +5,8 @@ class SpecialRelativityScene extends Scene {
         this._objects = [];
         Object.assign(this, data);
     }
-    addObject(object) {
+    add(object) {
         this._objects.push(object);
     }
 }
-export { SpecialRelativityScene };
+export default SpecialRelativityScene;

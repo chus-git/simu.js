@@ -1,8 +1,7 @@
 import { SceneObject, ISceneObject } from "../../SceneObject";
-import { Matrix } from 'mathjs';
-import { Position, Velocity } from "../../utils";
+import { Vector } from "../../utils";
 export interface ISpecialRelativityObject extends ISceneObject {
-    _velocity: Matrix;
+    _velocity: number[];
     _properTime: number;
     _lorentzFactor: number;
 }
@@ -15,16 +14,16 @@ declare class SpecialRelativityObject extends SceneObject {
     calculateRelativisticProperties(otherObject: SpecialRelativityObject): RelativeProperties;
     /** Getters */
     get properTime(): number;
-    get position(): Position;
-    get velocity(): Velocity;
+    get position(): Vector;
+    get velocity(): Vector;
     /** Setters */
     set properTime(time: number);
-    set position(position: Position);
-    set velocity(velocity: Velocity);
+    set position(position: Vector);
+    set velocity(velocity: Vector);
 }
 interface RelativeProperties {
-    vRelative: Matrix;
+    vRelative: number[];
     tRelative: number;
     lorentzFactor: number;
 }
-export { SpecialRelativityObject };
+export default SpecialRelativityObject;

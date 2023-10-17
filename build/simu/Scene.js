@@ -9,7 +9,7 @@ class Scene {
             return false;
         return true;
     }
-    addObject(object) {
+    add(object) {
         this._objects.push(object);
     }
     removeObject(object) {

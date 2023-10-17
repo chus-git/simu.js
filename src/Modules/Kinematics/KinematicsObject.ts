@@ -1,13 +1,10 @@
 import { add } from "mathjs";
 import { SceneObject, ISceneObject } from "../../SceneObject";
-import { Vector, Acceleration } from "../../utils";
+import { Vector } from "../../utils";
 import { calculatePosition, calculateVelocity } from "./KinematicsUtils";
 
 export interface IKinematicsObject extends ISceneObject {
-    _initialVelocity: Vector,
-    _accelerations: Acceleration[],
-    _velocity: Vector,
-    _actualAcceleration: Vector
+    _initialVelocity: Vector
 }
 
 class KinematicsObject extends SceneObject {
@@ -22,7 +19,7 @@ class KinematicsObject extends SceneObject {
     private _accelerations: { startAt: number, duration: number, vector: Vector }[] = [];
 
     // Actual acceleration
-    private _actualAcceleration: Vector;
+    private _acceleration: Vector;
 
     // Acceleration intervals
     private _accelerationIntervals: { startAt: number, endAt: number, duration: number, vector: Vector }[];
@@ -34,7 +31,7 @@ class KinematicsObject extends SceneObject {
         this._initialVelocity = new Vector();
         this._velocity = new Vector();
         this._accelerations = [];
-        this._actualAcceleration = new Vector();
+        this._acceleration = new Vector();
         this._accelerationIntervals = [];
 
         Object.assign(this, data);
@@ -71,7 +68,7 @@ class KinematicsObject extends SceneObject {
 
         this._position = currentPosition;
         this._velocity = currentVelocity;
-        this._actualAcceleration = currentAcceleration;
+        this._acceleration = currentAcceleration;
 
     }
 
@@ -126,12 +123,12 @@ class KinematicsObject extends SceneObject {
 
     }
 
-    addAcceleration(acceleration: Acceleration) {
+    addAcceleration(acceleration: { startAt: number, duration: number, vector: Vector }) {
         this._accelerations.push(acceleration);
         this.calculateAccelerationIntervals();
     }
 
-    removeAcceleration(acceleration: Acceleration) {
+    removeAcceleration(acceleration: { startAt: number, duration: number, vector: Vector }) {
 
         const index = this._accelerations.indexOf(acceleration);
 
@@ -149,8 +146,8 @@ class KinematicsObject extends SceneObject {
         return this._velocity;
     }
 
-    get actualAcceleration(): Vector {
-        return this._actualAcceleration;
+    get acceleration(): Vector {
+        return this._acceleration;
     }
 
     /** Setters */

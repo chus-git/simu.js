@@ -1,12 +1,12 @@
 import { SceneObject } from "../../SceneObject";
 import { norm, subtract } from 'mathjs';
-import { Velocity } from "../../utils";
+import { Vector } from "../../utils";
 import { calculateLorentzFactor, calculateTimeDilation } from "./SpecialRelativityUtils";
 import { calculatePosition } from "../Kinematics/KinematicsUtils";
 class SpecialRelativityObject extends SceneObject {
     constructor(data = {}) {
         super(data);
-        this._velocity = new Velocity();
+        this._velocity = new Vector();
         this._properTime = 0;
         this._lorentzFactor = 1;
         Object.assign(this, data);
@@ -50,4 +50,4 @@ class SpecialRelativityObject extends SceneObject {
         this._velocity = velocity;
     }
 }
-export { SpecialRelativityObject };
+export default SpecialRelativityObject;

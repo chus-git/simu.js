@@ -1,14 +1,14 @@
 import { SceneObject } from "../../SceneObject";
-import { Velocity, Acceleration } from "../../utils";
+import { Vector } from "../../utils";
 class GravityObject extends SceneObject {
     constructor(data = {}) {
         super(data);
-        this._initialVelocity = new Velocity();
+        this._initialVelocity = new Vector();
         this._mass = 1;
-        this._actualAcceleration = new Acceleration();
+        this._actualAcceleration = new Vector();
         Object.assign(this, data);
-        this._velocity = new Velocity();
-        this._velocity.vector = this._initialVelocity.vector.clone();
+        this._velocity = new Vector();
+        this._velocity = this._initialVelocity.clone();
     }
     update(time) {
     }
@@ -30,4 +30,4 @@ class GravityObject extends SceneObject {
         this._initialVelocity = initialVelocity;
     }
 }
-export { GravityObject };
+export default GravityObject;

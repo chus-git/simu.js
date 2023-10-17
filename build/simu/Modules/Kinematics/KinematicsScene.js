@@ -6,7 +6,15 @@ class KinematicsScene extends Scene {
         this.accelerations = [];
         Object.assign(this, data);
     }
-    addObject(object) {
+    update(time) {
+        if (!super.update(time))
+            return false;
+        this._objects.forEach((object) => {
+            object.update(time);
+        });
+        return true;
+    }
+    add(object) {
         this._objects.push(object);
         this.accelerations.forEach((acceleration) => {
             object.addAcceleration(acceleration);
@@ -28,4 +36,4 @@ class KinematicsScene extends Scene {
         });
     }
 }
-export { KinematicsScene };
+export default KinematicsScene;

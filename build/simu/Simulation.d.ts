@@ -4,6 +4,14 @@ declare enum SimulationState {
     Pause = "pause",
     Play = "play"
 }
+export interface ISimulation {
+    _duration: number;
+    _inLoop: boolean;
+    _playbackSpeed: number;
+}
+/**
+ * Represents a simulation with a time-based scene.
+ */
 declare class Simulation {
     protected _time: number;
     protected _duration: number;
@@ -12,7 +20,7 @@ declare class Simulation {
     protected _state: SimulationState;
     protected _scene: Scene;
     updateEventEmmitter: EventEmitter<number>;
-    constructor(data?: Partial<Simulation>);
+    constructor(data?: Partial<ISimulation>);
     /**
      * Resets the simulation.
      * Sets the current simulation time to 0.
@@ -37,28 +45,28 @@ declare class Simulation {
     toggleLooping(): void;
     /**
      * Resumes the time loop.
-     * This function is responsible for incrementing the
-     * simulation time by 0.001 every millisecond.
      */
     resumeTimeLoop(): void;
     /**
-     * Update the simulation attending to the actual
-     * simulation time
+     * Updates the simulation's scene at the given time.
+     * @param {number} time - The simulation time to update to.
      */
     update(time?: number): void;
+    /**
+     * Loads a new scene for the simulation.
+     * @param {Scene} scene - The scene to load.
+     */
+    loadScene(scene: Scene): void;
     /** Setters */
     set time(time: number);
     set duration(duration: number);
     set inLoop(inLoop: boolean);
     set playbackSpeed(playbackSpeed: number);
-    set state(state: SimulationState);
-    set scene(scene: Scene);
     /** Getters */
     get time(): number;
     get duration(): number;
     get inLoop(): boolean;
     get playbackSpeed(): number;
     get state(): SimulationState;
-    get scene(): Scene;
 }
 export { Simulation, SimulationState };

@@ -1,26 +1,15 @@
-import { Matrix } from "mathjs";
-interface IPosition {
-    _x: number;
-    _y: number;
-    _z: number;
-}
-declare class Position {
-    private _x;
-    private _y;
-    private _z;
+declare class Vector {
     private _vector;
-    constructor(data?: Partial<IPosition>);
-    asArray(): number[];
-    /** Getters */
+    constructor(x?: number, y?: number, z?: number);
+    clone(): Vector;
     get x(): number;
     get y(): number;
     get z(): number;
-    get vector(): Matrix;
-    /** Setters */
-    set x(value: number);
-    set y(value: number);
-    set z(value: number);
-    set vector(value: Matrix);
+    get vector(): number[];
+    set x(x: number);
+    set y(y: number);
+    set z(z: number);
+    set vector(vector: number[]);
 }
 declare enum PositionUnit {
     Nanometers = 1000000000,
@@ -39,32 +28,10 @@ declare enum PositionUnit {
     Yards = 1.09361,
     Miles = 0.000621371,
     NauticalMiles = 0.000539957,
+    LightSeconds = 3.33564e-9,
     AstronomicalUnits = 6.68459e-12,
     LightYears = 1.057e-16,
     Parsecs = 3.24078e-17
-}
-interface IVelocity {
-    _x: number;
-    _y: number;
-    _z: number;
-}
-declare class Velocity {
-    private _x;
-    private _y;
-    private _z;
-    private _vector;
-    constructor(data?: Partial<IVelocity>);
-    asArray(): number[];
-    /** Getters */
-    get x(): number;
-    get y(): number;
-    get z(): number;
-    get vector(): Matrix;
-    /** Setters */
-    set x(value: number);
-    set y(value: number);
-    set z(value: number);
-    set vector(value: Matrix);
 }
 declare enum VelocityUnit {
     MetersPerSecond = 1,
@@ -76,40 +43,11 @@ declare enum VelocityUnit {
     SpeedOfLight = 3.33564e-9,
     SpeedOfSoundAtSeaLevel = 0.00291129
 }
-interface IAcceleration {
-    _x: number;
-    _y: number;
-    _z: number;
-    _startAt: number;
-    _duration: number;
-}
-declare class Acceleration {
-    private _x;
-    private _y;
-    private _z;
-    private _vector;
-    private _startAt;
-    private _duration;
-    constructor(data?: Partial<IAcceleration>);
-    /** Getters */
-    get startAt(): number;
-    get duration(): number;
-    get x(): number;
-    get y(): number;
-    get z(): number;
-    get vector(): Matrix;
-    /** Setters */
-    set startAt(startAt: number);
-    set duration(duration: number);
-    set x(value: number);
-    set y(value: number);
-    set z(value: number);
-    set vector(value: Matrix);
-}
 declare enum AccelerationUnit {
     MetersPerSecondSquared = 1,
     KilometersPerHourSquared = 0.000277778,
     MilesPerHourSquared = 0.00044704,
     FeetPerSecondSquared = 0.3048
 }
-export { Position, PositionUnit, Velocity, VelocityUnit, Acceleration, AccelerationUnit };
+declare const vector: (x?: number, y?: number, z?: number) => Vector;
+export { Vector, vector, PositionUnit, VelocityUnit, AccelerationUnit };
