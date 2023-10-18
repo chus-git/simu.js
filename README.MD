@@ -3,6 +3,7 @@
 [![NPM version](https://img.shields.io/npm/v/simu.svg?style=flat)](https://www.npmjs.com/package/simu) [![NPM monthly downloads](https://img.shields.io/npm/dm/simu.svg?style=flat)](https://npmjs.org/package/simu) [![NPM total downloads](https://img.shields.io/npm/dt/simu.svg?style=flat)](https://npmjs.org/package/simu)
 
 - [Introduction](#introduction)
+- [Units](#units)
 - [Modules](#modules)
     - [Kinematics](#kinematics)
     - [Special relativity](#special-relativity)
@@ -13,6 +14,46 @@
 This library offers a robust logic engine for simulating physics within environments of up to three dimensions. It provides a variety of pre-built modules for your convenience.
 
 The special feature of this library is that it allows you to determine the state of a scene at any given moment by specifying only its initial properties.
+
+## Units
+
+Units are expressed in the International System. You can use the following units:
+
+### Time
+
+Time is expressed in seconds. It is used to determine the duration of a [simulation](#simulation), set the simulation time, among other uses. Here are some examples:
+
+```javascript
+import * as SIMU from 'simu';
+
+// A simulation that lasts 60 seconds
+let simulation = new SIMU.Simulation({
+    duration: 60
+});
+
+// Set simulation time to 30 seconds
+simulation.time = 30;
+
+// Update the simulation to the next second
+simulation.update(simulation.time + 1);
+```
+
+### Vectors
+
+Position, velocity and acceleration are expressed in vector units. You can create a vector in the following way:
+
+```javascript
+import * as SIMU from 'simu';
+
+// Position x=1m, y=0m, z=0m
+let position = SIMU.vector(1, 0, 0);
+
+// Velocity x=0m/s, y=1m/s, z=0m/s
+let velocity = SIMU.vector(0, 1, 0);
+
+// Acceleration x=0m/s^2, y=0m/s^2, z=1m/s^2
+let acceleration = SIMU.vector(0, 0, 1);
+```
 
 ## Modules
 
@@ -32,7 +73,7 @@ kinematicsScene.addAcceleration({
     vector: SIMU.vector(0, -9.81);
 });
 
-// Point acceleration that starts at second 2 with 1s duration
+// Airflow acceleration that starts at second 2 with 1s duration
 kinematicsScene.addAcceleration({
     startAt: 2,
     duration: 1,
@@ -45,7 +86,7 @@ You have the flexibility to create kinematics objects with customizable initial 
 ```javascript
 const helicopter = new SIMU.Kinematics.Object({
     _name: 'Helicopter',
-    _initialPosition: SIMU.vector(0, 100, 0);
+    _initialPosition: SIMU.vector(0, 10, 0);
 });
 
 // Add permanent vertical helicopter acceleration
@@ -94,6 +135,22 @@ for(let i = 0; i <= 10; i++) {
 }
 ```
 
+Output
+
+```bash
+At second 0, Rocket proper time is 0
+At second 1, Rocket proper time is 3.2025630761017405
+At second 2, Rocket proper time is 6.405126152203481
+At second 3, Rocket proper time is 9.60768922830522
+At second 4, Rocket proper time is 12.810252304406962
+At second 5, Rocket proper time is 16.0128153805087
+At second 6, Rocket proper time is 19.21537845661044
+At second 7, Rocket proper time is 22.41794153271218
+At second 8, Rocket proper time is 25.620504608813924
+At second 9, Rocket proper time is 28.823067684915664
+At second 10, Rocket proper time is 32.0256307610174
+```
+
 Let's create a scene and add a second object.
 
 ```javascript
@@ -115,19 +172,26 @@ specialRelativityScene.add(mike);
 Let's observe some relativistic properties of rocket from Mike's perspective:
 
 ```javascript
-let properties;
 
-specialRelativityScene.update(60);
-properties = mike.calculateRelativisticProperties(rocket);
-console.log("In one minute, the rocket's time is " + properties.tRelative + " seconds behind Mike's");
+specialRelativityScene.update(0);
 
-specialRelativityScene.update(3600);
-properties = mike.calculateRelativisticProperties(rocket);
-console.log("In one hour, the rocket's time is " + properties.tRelative + " seconds behind Mike's");
+let properties = mike.calculateRelativisticProperties(rocket);
 
-specialRelativityScene.update(31536000);
-properties = mike.calculateRelativisticProperties(rocket);
-console.log("In one year, the rocket's time is " + properties.tRelative + " seconds behind Mike's");
+// Obtaining rocket's lorentz factor
+console.log("At second 0, the rocket's lorentz factor is " + properties.lorentzFactor + " from Mike's perspective");
+
+// Obtaining rocket's velocity relative to Mike
+console.log("At second 0, the rocket's velocity relative to Mike is " + properties.vRelative.vector);
+
+// Obtaining rocket's time relative to Mike
+console.log("At second 0, the rocket's time is " + (rocket.properTime - mike.properTime) + " seconds behind Mike's");
+
+// Obtaining rocket's length in meters at different moments
+let rocketLength = 10;
+console.log("At second 0, the rocket's length is " + properties.lorentzFactor * rocketLength + " meters from Mike's perspective");
+
+// Obtaining rocket's mass in kilograms
+console.log("At second 0, the rocket's mass is " + properties.mRelative + " kilograms from Mike's perspective");
 ```
 
 ## Simulation
@@ -149,8 +213,8 @@ simulation.loadScene(kinematicsScene);
 
 simulation.play();
 
-simulation.updateEventEmmitter.subscribe((time) = {
-    console.log("Helicopter's position at second " + ": " + helicopter.position.vector)
+simulation.updateEventEmitter.subscribe(() = {
+    console.log("Helicopter's position at second " + simulation.time + ": " + helicopter.position.vector)
 })
 ```
 
