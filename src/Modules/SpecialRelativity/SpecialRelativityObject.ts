@@ -5,7 +5,7 @@ import { calculateLorentzFactor, calculateTimeDilation } from "./SpecialRelativi
 import { calculatePosition } from "../Kinematics/KinematicsUtils";
 
 export interface ISpecialRelativityObject extends ISceneObject {
-    _velocity: number[],
+    _velocity: Vector,
     _properTime: number,
     _lorentzFactor: number
 }
@@ -21,6 +21,9 @@ class SpecialRelativityObject extends SceneObject {
     // Lorentz factor
     private _lorentzFactor: number;
 
+    // Mass
+    private _mass: number;
+
     constructor(data: Partial<ISpecialRelativityObject> = {}) {
 
         super(data);
@@ -28,6 +31,7 @@ class SpecialRelativityObject extends SceneObject {
         this._velocity = new Vector();
         this._properTime = 0;
         this._lorentzFactor = 1;
+        this._mass = 1;
 
         Object.assign(this, data);
 
@@ -44,17 +48,24 @@ class SpecialRelativityObject extends SceneObject {
     calculateRelativisticProperties(otherObject: SpecialRelativityObject): RelativeProperties {
 
         // Relative velocity between this and other object
-        const vRelative: number[] = subtract(otherObject.velocity.vector, this._velocity.vector);
+        const vRelative: Vector = new Vector();
+        // Obtain velocity vector as numbers array from velocities vectors and positions
+        const vRelativeVector: number[] = subtract(otherObject.velocity.vector, this._velocity.vector) as number[];
+        vRelative.vector = vRelativeVector;
 
         // Relative time between this and other object
-        const tRelative: number = calculateTimeDilation(Number(norm(vRelative)), otherObject.properTime);
+        const tRelative: number = calculateTimeDilation(Number(norm(vRelative.vector)), otherObject.properTime);
+
+        // Relative mass between this and other object
+        const mRelative: number = this._lorentzFactor * otherObject.mass;
 
         // Relative lorentz factor bewteen this and other object
-        const lorentzFactor: number = calculateLorentzFactor(Number(norm(vRelative)));
+        const lorentzFactor: number = calculateLorentzFactor(Number(norm(vRelative.vector)));
 
         return {
             vRelative: vRelative,
             tRelative: tRelative,
+            mRelative: mRelative,
             lorentzFactor: lorentzFactor
         };
 
@@ -74,6 +85,10 @@ class SpecialRelativityObject extends SceneObject {
         return this._velocity;
     }
 
+    get mass(): number {
+        return this._mass;
+    }
+
     /** Setters */
 
     set properTime(time: number) {
@@ -88,11 +103,16 @@ class SpecialRelativityObject extends SceneObject {
         this._velocity = velocity;
     }
 
+    set mass(mass: number) {
+        this._mass = mass;
+    }
+
 }
 
 interface RelativeProperties {
-    vRelative: number[],
+    vRelative: Vector,
     tRelative: number,
+    mRelative: number,
     lorentzFactor: number
 }
 
