@@ -8,27 +8,37 @@ class GravityScene extends Scene {
     constructor(data = {}) {
         super(data);
         this._objects = [];
-        this.cachedStates = [new GravityCachedScene({
-                time: this.lastTimeUpdate,
-                objects: this._objects.map((object) => {
-                    const result = {
-                        mass: object.mass,
-                        position: object.position.clone(),
-                        velocity: object.velocity.clone(),
-                        acceleration: object.actualAcceleration.clone()
-                    };
-                    return result;
-                })
-            })];
+        this.cachedStates = [];
         this.updatingCachedScenes = false;
-        this.isCached = false;
         Object.assign(this, data);
+    }
+    // Function for obtain this object in json, obtain its size in bytes (kb) and show in an alert
+    showMemoryUsage() {
+        const json = JSON.stringify(this);
+        const bytes = new Blob([json]).size;
+        const kb = bytes / 1000;
+        alert(`Memory usage: ${kb.toFixed(2)}kb`);
     }
     add(object) {
         super.add(object);
+        this.updateInitialCachedState();
     }
     removeObject(object) {
         super.removeObject(object);
+    }
+    updateInitialCachedState() {
+        this.cachedStates[0] = new GravityCachedScene({
+            time: this.lastTimeUpdate,
+            objects: this._objects.map((object) => {
+                const result = {
+                    mass: object.mass,
+                    position: object.initialPosition.clone(),
+                    velocity: object.initialVelocity.clone(),
+                    acceleration: object.actualAcceleration.clone()
+                };
+                return result;
+            })
+        });
     }
     update(time) {
         if (!super.update(time))
@@ -36,11 +46,7 @@ class GravityScene extends Scene {
         const deltaTime = time - this.lastTimeUpdate;
         let state;
         // If only necessary do one step
-        if (Math.abs(deltaTime) < 5 || !this.isCached) {
-            if (Math.abs(deltaTime) > 5 && !this.isCached) {
-                console.warn("Scene not catched! Performance warning.");
-                return false;
-            }
+        if (deltaTime > 0 && Math.abs(deltaTime) < 0.5) {
             state = new GravityCachedScene({
                 time: this.lastTimeUpdate,
                 objects: this._objects.map((object) => {
@@ -53,20 +59,33 @@ class GravityScene extends Scene {
                     return result;
                 })
             });
-            state.stepTo(time, 0.001);
+            if (deltaTime > 0 && this.cachedStates.every(cachedState => Math.abs(cachedState.time - time) > 0.2)) {
+                this.cachedStates.push(state.clone());
+                console.log("State cached at second " + time.toFixed(2) + "s! Number of cached states: " + this.cachedStates.length);
+                // If there are more than 10000 cached states, remove one random except first
+                if (this.cachedStates.length > 10000) {
+                    const index = Math.floor(Math.random() * (this.cachedStates.length - 1)) + 1;
+                    this.cachedStates.splice(index, 1);
+                }
+            }
         }
         // If necessary do more than one step
         else {
-            state = this.cachedStates.reduce((prev, curr) => {
+            const closestState = this.cachedStates.reduce((prev, curr) => {
                 return (Math.abs(curr.time - time) < Math.abs(prev.time - time) ? curr : prev);
             }).clone();
-            state.stepTo(time, Math.min(Math.abs(time - this.lastTimeUpdate), 1 / 60));
+            if (Math.abs(closestState.time - time) > 5) {
+                console.warn("Closest state is too far away! ", closestState.time, time);
+                return false;
+            }
+            state = closestState;
         }
+        state.stepTo(time);
         this.loadCachedScene(state);
         this.lastTimeUpdate = time;
         return true;
     }
-    updateCachedScenes(to = MAX_GRAVITY_SIMULATION_DURATION, step = 0.01, cacheEach = 1) {
+    updateCachedScenes(to = MAX_GRAVITY_SIMULATION_DURATION, step = 0.005, cacheEach = 1) {
         const each = (cachedState, i = 0) => {
             if (i <= to) {
                 cachedState.stepTo(i, step);
@@ -85,8 +104,6 @@ class GravityScene extends Scene {
             return;
         }
         this.updatingCachedScenes = true;
-        // Clear cached states
-        this.cachedStates = [];
         let cachedStates = [];
         const objects = this._objects.map((object) => {
             const result = {
@@ -97,7 +114,6 @@ class GravityScene extends Scene {
             };
             return result;
         });
-        // Prepare the cached 
         const cachedState = new GravityCachedScene({
             time: 0,
             objects: objects
@@ -115,15 +131,15 @@ class GravityScene extends Scene {
             object.actualAcceleration.vector = scene.objects[index].acceleration.clone().vector;
         });
     }
-    isAvailable() {
-        return this.isCached;
-    }
 }
 class GravityCachedScene {
     constructor(data = {}) {
         this.time = 0;
         this.objects = [];
         Object.assign(this, data);
+        if (this.objects.length === 0) {
+            console.warn("Empty cached scene!", data.time, data.objects);
+        }
     }
     step(dt) {
         // Calculate all objects acceleration on each step
@@ -145,7 +161,7 @@ class GravityCachedScene {
         });
         this.time += dt;
     }
-    stepTo(to, step = 0.01) {
+    stepTo(to, step = 0.005) {
         if (to === this.time)
             return;
         const timeDiff = to - this.time;

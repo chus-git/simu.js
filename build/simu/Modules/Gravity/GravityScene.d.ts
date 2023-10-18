@@ -5,14 +5,14 @@ declare class GravityScene extends Scene {
     protected _objects: GravityObject[];
     private cachedStates;
     private updatingCachedScenes;
-    private isCached;
     constructor(data?: Partial<GravityScene>);
+    showMemoryUsage(): void;
     add(object: GravityObject): void;
     removeObject(object: GravityObject): void;
+    updateInitialCachedState(): void;
     update(time: number): boolean;
     updateCachedScenes(to?: number, step?: number, cacheEach?: number): void;
     loadCachedScene(scene: GravityCachedScene): void;
-    isAvailable(): boolean;
 }
 declare class GravityCachedScene {
     time: number;
