@@ -95,6 +95,10 @@ Output:
 
 You can use different physics modules prepared to be loaded on a [simulation](#simulation). These are the ones currently available:
 
+1. [Kinematics](#kinematics)
+2. [Special relativity](#special-relativity)
+3. [Gravity](#gravity)
+
 ### Kinematics
 
 The Kinematics module enables you to craft dynamic scenes with the flexibility to introduce accelerations that influence all objects within the scene, such as gravity or air forces, for instance.
@@ -228,7 +232,9 @@ console.log("At second 0, the rocket's mass is " + properties.mRelative + " kilo
 
 ### Gravity
 
-Gravity module allows you to simulate the gravitational attraction between two objects or more objects. It's more complex than other modules because it requires to calculate the gravitational force between all objects in the scene in different moments, being necessaty to cache an entire simulation in memory, if you want to reproduce a gravity simulation.
+Gravity module allows you to simulate the gravitational attraction between two or more objects.
+
+> A gravity scene should be cached before being used in a simulation. This is because the gravity module is computationally expensive, so it is recommended to cache the scene before using it in a simulation. Anyway, if you want to reproduce a gravity simulation from time 0, you don't need to cache the scene, but if you want to reproduce it from a specific time, you have to "cache" the scene with an specified duration. See [How to cache a gravity scene](#how-to-cache-a-gravity-scene) for more information.
 
 This is an example of how to implement a gravity simulation:
 
@@ -258,6 +264,8 @@ gravityScene.update(0);
 
 console.log("Moon acceleration: " + moon.acceleration.vector)
 ```
+
+#### How to cache a gravity scene
 
 As it have been said, if you want to reproduce a gravity simulation, you can do it reproducing it from time 0, but if you want to reproduce it from a specific time, you have to "cache" the scene with an specified duration:
 
