@@ -67,6 +67,7 @@ var VelocityUnit;
 var AccelerationUnit;
 (function (AccelerationUnit) {
     AccelerationUnit[AccelerationUnit["MetersPerSecondSquared"] = 1] = "MetersPerSecondSquared";
+    AccelerationUnit[AccelerationUnit["KilometersPerSecondSquared"] = 0.001] = "KilometersPerSecondSquared";
     AccelerationUnit[AccelerationUnit["KilometersPerHourSquared"] = 0.000277778] = "KilometersPerHourSquared";
     AccelerationUnit[AccelerationUnit["MilesPerHourSquared"] = 0.00044704] = "MilesPerHourSquared";
     AccelerationUnit[AccelerationUnit["FeetPerSecondSquared"] = 0.3048] = "FeetPerSecondSquared";
@@ -74,4 +75,8 @@ var AccelerationUnit;
 const vector = (x = 0, y = 0, z = 0) => {
     return new Vector(x, y, z);
 };
-export { Vector, vector, PositionUnit, VelocityUnit, AccelerationUnit };
+// Converts a value in International System units to another unit
+const convert = (valueInIS, to) => {
+    return valueInIS * to;
+};
+export { Vector, vector, PositionUnit, VelocityUnit, AccelerationUnit, convert };

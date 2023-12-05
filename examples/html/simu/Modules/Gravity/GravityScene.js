@@ -55,7 +55,7 @@ class GravityScene extends Scene {
         this.lastTimeUpdate = time;
         return true;
     }
-    updateCachedScenes(to = MAX_GRAVITY_SIMULATION_DURATION, step = 0.01, cacheEach = 1) {
+    cache(to = MAX_GRAVITY_SIMULATION_DURATION, step = 0.01, cacheEach = 1) {
         if (this.updatingCachedScenes) {
             console.warn("There is an active cached scenes update!");
             return;

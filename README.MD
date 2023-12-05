@@ -4,11 +4,14 @@
 
 - [Introduction](#introduction)
 - [Units](#units)
+    - [Vectors](#vectors)
+    - [Conversions](#conversions)
 - [Modules](#modules)
     - [Kinematics](#kinematics)
     - [Special relativity](#special-relativity)
-- [Simulation](#simulation-1)
-
+    - [Gravity](#gravity)
+- [Simulation](#simulation)
+- [Cloning this repository](#cloning-this-repository)
 ## Introduction
 
 This library offers a robust logic engine for simulating physics within environments of up to three dimensions. It provides a variety of pre-built modules for your convenience.
@@ -17,26 +20,7 @@ The special feature of this library is that it allows you to determine the state
 
 ## Units
 
-Units are expressed in the International System. You can use the following units:
-
-### Time
-
-Time is expressed in seconds. It is used to determine the duration of a [simulation](#simulation), set the simulation time, among other uses. Here are some examples:
-
-```javascript
-import * as SIMU from 'simu';
-
-// A simulation that lasts 60 seconds
-let simulation = new SIMU.Simulation({
-    duration: 60
-});
-
-// Set simulation time to 30 seconds
-simulation.time = 30;
-
-// Update the simulation to the next second
-simulation.update(simulation.time + 1);
-```
+Units are expressed in the International System.
 
 ### Vectors
 
@@ -53,6 +37,58 @@ let velocity = SIMU.vector(0, 1, 0);
 
 // Acceleration x=0m/s^2, y=0m/s^2, z=1m/s^2
 let acceleration = SIMU.vector(0, 0, 1);
+```
+
+Access to vector components:
+
+```javascript
+console.log(position.vector); // [1, 0, 0]
+console.log(velocity.vector); // [0, 1, 0]
+console.log(acceleration.vector); // [0, 0, 1]
+
+console.log(position.x); // 1
+console.log(velocity.y); // 1
+console.log(acceleration.z); // 1
+```
+
+Modify vector components:
+
+```javascript
+position.vector = [2, 0, 0];
+velocity.y = 2;
+```
+
+Clone a vector:
+
+```javascript
+let anotherVector = position.clone();
+```
+
+### Conversions
+
+You can convert units to other units of the same type:
+
+```javascript
+let position = SIMU.vector(1, 0);
+let velocity = SIMU.vector(SIMU.SPEED_OF_LIGHT * 0.5, 0);
+let acceleration = SIMU.vector(0, -SIMU.G_SUN);
+
+// Get position as cm
+console.log(position.x + "m = " + SIMU.convert(position.x, SIMU.PositionUnit.Centimeters) + "cm");
+
+// Get velocity as c
+console.log(velocity.x + "m/s = " + SIMU.convert(velocity.x, SIMU.VelocityUnit.SpeedOfLight) + "c");
+
+// Get acceleration as km/h^2
+console.log(acceleration.y + "m/s^2 = " + SIMU.convert(acceleration.y, SIMU.AccelerationUnit.KilometersPerSecondSquared) + "km/s^2");
+```
+
+Output:
+
+```
+1m = 100cm
+149896229m/s = 0.49999985730156c
+-274m/s^2 = -0.274km/s^2
 ```
 
 ## Modules
@@ -162,9 +198,6 @@ const mike = new SIMU.SpecialRelativity.Object({
     _velocity: SIMU.vector(0, 0, 0)
 });
 
-// Set rocket position at 1 light second away from mike
-rocket.initialPosition = SIMU.vector(1/SIMU.PositionUnit.LightSeconds, 1000, 0);
-
 specialRelativityScene.add(rocket);
 specialRelativityScene.add(mike);
 ```
@@ -172,7 +205,6 @@ specialRelativityScene.add(mike);
 Let's observe some relativistic properties of rocket from Mike's perspective:
 
 ```javascript
-
 specialRelativityScene.update(0);
 
 let properties = mike.calculateRelativisticProperties(rocket);
@@ -193,6 +225,79 @@ console.log("At second 0, the rocket's length is " + properties.lorentzFactor * 
 // Obtaining rocket's mass in kilograms
 console.log("At second 0, the rocket's mass is " + properties.mRelative + " kilograms from Mike's perspective");
 ```
+
+### Gravity
+
+Gravity module allows you to simulate the gravitational attraction between two objects or more objects. It's more complex than other modules because it requires to calculate the gravitational force between all objects in the scene in different moments, being necessaty to cache an entire simulation in memory, if you want to reproduce a gravity simulation.
+
+This is an example of how to implement a gravity simulation:
+
+```javascript
+import * as SIMU from 'simu';
+
+const earth = new SIMU.Gravity.Object({
+    _name: 'Earth',
+    _mass: 5.972e+24,
+    _initialPosition: SIMU.vector(0, 0, 0),
+    _velocity: SIMU.vector(0, 0, 0)
+});
+
+const moon = new SIMU.Gravity.Object({
+    _name: 'Moon',
+    _mass: 7.34767309e+22,
+    _initialPosition: SIMU.vector(384400000, 0, 0),
+    _velocity: SIMU.vector(0, 1022, 0)
+});
+
+const gravityScene = new SIMU.Gravity.Scene();
+
+gravityScene.add(earth);
+gravityScene.add(moon);
+
+gravityScene.update(0);
+
+console.log("Moon acceleration: " + moon.acceleration.vector)
+```
+
+As it have been said, if you want to reproduce a gravity simulation, you can do it reproducing it from time 0, but if you want to reproduce it from a specific time, you have to "cache" the scene with an specified duration:
+
+```javascript
+// With the code provided before
+
+const simulation = new SIMU.Simulation();
+
+simulation.loadScene(gravityScene);
+
+/* Reproduce from time 0, not cache required because
+* next step (0.1s-0.2s) is not far away from
+* previous step (0s), so is not required too much
+* processing capacity */
+
+simulation.time = 0;
+simulation.play();
+simulation.pause();
+
+/* Reproduce from time 10, cache required because next
+* step (time 10s) is far away from previous step (time 0s) */
+
+gravityScene.cache(10);
+simulation.time = 10;
+simulation.play();
+simulation.pause();
+```
+
+You can manage the precision of the cached scene on cache() function:
+
+```javascript
+// Cache 100 seconds of simulation with a precision of 0.001 seconds between steps
+gravityScene.cache(100, 0.001);
+
+// Additionally, you can change the period scene is cached. Default is 1s, so if you indicate to cache 100s there will be 100 steps cached. The smaller the value, the less computational power will be required, but more memory will be used.
+gravityScene.cache(100, 0.001, 1);
+```
+
+
+
 
 ## Simulation
 
@@ -218,7 +323,7 @@ simulation.updateEventEmitter.subscribe(() = {
 })
 ```
 
-### Cloning this repository
+## Cloning this repository
 
 You can clone this repository with the following command:
 

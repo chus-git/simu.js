@@ -80,6 +80,7 @@ enum VelocityUnit {
 
 enum AccelerationUnit {
     MetersPerSecondSquared = 1,
+    KilometersPerSecondSquared = 0.001,
     KilometersPerHourSquared = 0.000277778,
     MilesPerHourSquared = 0.00044704,
     FeetPerSecondSquared = 0.3048
@@ -89,4 +90,9 @@ const vector = (x: number = 0, y: number = 0, z: number = 0) => {
     return new Vector(x, y, z);
 }
 
-export { Vector, vector, PositionUnit, VelocityUnit, AccelerationUnit }
+// Converts a value in International System units to another unit
+const convert = (valueInIS: number, to: number) => {
+    return valueInIS * to;
+}
+
+export { Vector, vector, PositionUnit, VelocityUnit, AccelerationUnit, convert }

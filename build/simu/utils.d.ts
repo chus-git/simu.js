@@ -45,9 +45,11 @@ declare enum VelocityUnit {
 }
 declare enum AccelerationUnit {
     MetersPerSecondSquared = 1,
+    KilometersPerSecondSquared = 0.001,
     KilometersPerHourSquared = 0.000277778,
     MilesPerHourSquared = 0.00044704,
     FeetPerSecondSquared = 0.3048
 }
 declare const vector: (x?: number, y?: number, z?: number) => Vector;
-export { Vector, vector, PositionUnit, VelocityUnit, AccelerationUnit };
+declare const convert: (valueInIS: number, to: number) => number;
+export { Vector, vector, PositionUnit, VelocityUnit, AccelerationUnit, convert };

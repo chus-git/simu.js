@@ -24,6 +24,6 @@ const object2 = new SIMU.GravityObject({
 scene.addObject(object1)
 scene.addObject(object2)
 
-scene.updateCachedScenes(60);
+scene.cache(60);
 
 simulation.play()

@@ -11,7 +11,7 @@ declare class GravityScene extends Scene {
     removeObject(object: GravityObject): void;
     updateInitialCachedState(): void;
     update(time: number): boolean;
-    updateCachedScenes(to?: number, step?: number, cacheEach?: number): void;
+    cache(to?: number, step?: number, cacheEach?: number): void;
     loadCachedScene(scene: GravityCachedScene): void;
 }
 declare class GravityCachedScene {
