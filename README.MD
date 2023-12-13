@@ -9,6 +9,8 @@
     - [Special relativity](#special-relativity)
 - [Simulation](#simulation-1)
 
+> Atention! This is a work in progress. The documentation is not complete and the library is not ready for production.
+
 ## Introduction
 
 This library offers a robust logic engine for simulating physics within environments of up to three dimensions. It provides a variety of pre-built modules for your convenience.
