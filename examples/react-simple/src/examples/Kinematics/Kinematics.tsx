@@ -28,10 +28,10 @@ function KinematicsExample() {
             console.log(ball.position.x)
         };
 
-        simulation.updateEventEmmitter.subscribe(handleUpdateSimulation);
+        simulation.updateEventEmitter.subscribe(handleUpdateSimulation);
 
         return () => {
-            simulation.updateEventEmmitter.unsubscribe(handleUpdateSimulation);
+            simulation.updateEventEmitter.unsubscribe(handleUpdateSimulation);
         };
 
     }, []);

@@ -87,7 +87,7 @@ class GravityScene extends Scene {
                 })
             });
 
-            if (deltaTime > 0 && this.cachedStates.every(cachedState => Math.abs(cachedState.time - time) > 0.2)) {
+            if (deltaTime > 0 && this.cachedStates.every(cachedState => Math.abs(cachedState.time - time) > 1)) {
 
                 this.cachedStates.push(state.clone());
                 console.log("State cached at second " + time.toFixed(2) + "s! Number of cached states: " + this.cachedStates.length);
@@ -127,7 +127,7 @@ class GravityScene extends Scene {
 
     }
 
-    updateCachedScenes(to: number = MAX_GRAVITY_SIMULATION_DURATION, step: number = 0.005, cacheEach: number = 1) {
+    cache(to: number = MAX_GRAVITY_SIMULATION_DURATION, step: number = 0.005, cacheEach: number = 1) {
 
         const each = (cachedState: GravityCachedScene, i: number = 0) => {
 

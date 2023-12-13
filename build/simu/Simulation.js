@@ -16,7 +16,7 @@ class Simulation {
         this._playbackSpeed = 1;
         this._state = SimulationState.Pause;
         this._scene = new Scene();
-        this.updateEventEmmitter = new EventEmitter();
+        this.updateEventEmitter = new EventEmitter();
         Object.assign(this, data);
     }
     /**
@@ -71,7 +71,7 @@ class Simulation {
             if (this._playbackSpeed > 0 && this._inLoop && time >= this._duration) {
                 time -= this._duration;
             }
-            // Return to the end of the simulation if it is playing in a loop
+            // Return to the end of the simulation if it is playing in reverse and in a loop
             else if (this._playbackSpeed < 0 && this._inLoop && time <= 0) {
                 time += this._duration;
             }
@@ -80,6 +80,7 @@ class Simulation {
                 time = this._duration;
                 this.pause();
             }
+            // Pause the simulation if the simulation is playing in reverse and has reached the beginning
             else if (this._playbackSpeed < 0 && this._state === SimulationState.Play && time <= 0) {
                 time = 0;
                 this.pause();
@@ -99,7 +100,7 @@ class Simulation {
      */
     update(time = this._time) {
         this._scene.update(time);
-        this.updateEventEmmitter.emit(this._time);
+        this.updateEventEmitter.emit(this._time);
     }
     /**
      * Loads a new scene for the simulation.

@@ -12,13 +12,11 @@ function GravityExample() {
     const [scene, setScene] = useState(new SIMU.Gravity.Scene());
 
     const [earth, setEarth] = useState(new SIMU.Gravity.Object({
-        _mass: 10e11,
-        _initialPosition: SIMU.vector(-50, 0),
-        _initialVelocity: SIMU.vector(0, -0.5)
+        _mass: 10e11
     }));
 
     const [moon, setMoon] = useState(new SIMU.Gravity.Object({
-        _mass: 10e11,
+        _mass: 1,
         _initialPosition: SIMU.vector(50, 0),
         _initialVelocity: SIMU.vector(0, 0.5)
     }));
@@ -67,8 +65,6 @@ function GravityExample() {
 
         scene.add(earth);
         scene.add(moon);
-        scene.add(moon2);
-        scene.add(moon3);
 
         scene.cache(100, 0.001);
 

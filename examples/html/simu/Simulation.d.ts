@@ -11,7 +11,7 @@ declare class Simulation {
     protected _playbackSpeed: number;
     protected _state: SimulationState;
     protected _scene: Scene;
-    updateEventEmmitter: EventEmitter<number>;
+    updateEventEmitter: EventEmitter<number>;
     constructor(data?: Partial<Simulation>);
     /**
      * Resets the simulation.
