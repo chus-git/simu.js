@@ -150,6 +150,10 @@ class KinematicsObject extends SceneObject {
         return this._acceleration;
     }
 
+    get accelerations(): { startAt: number, duration: number, vector: Vector }[] {
+        return this._accelerations;
+    }
+
     /** Setters */
 
     set initialVelocity(initialVelocity: Vector) {
@@ -158,6 +162,11 @@ class KinematicsObject extends SceneObject {
 
     get initialVelocity(): Vector {
         return this._initialVelocity;
+    }
+
+    set accelerations(accelerations: { startAt: number, duration: number, vector: Vector }[]) {
+        this._accelerations = accelerations;
+        this.calculateAccelerationIntervals();
     }
 
 }
