@@ -88,12 +88,19 @@ class KinematicsObject extends SceneObject {
     get acceleration() {
         return this._acceleration;
     }
+    get accelerations() {
+        return this._accelerations;
+    }
     /** Setters */
     set initialVelocity(initialVelocity) {
         this._initialVelocity = initialVelocity;
     }
     get initialVelocity() {
         return this._initialVelocity;
+    }
+    set accelerations(accelerations) {
+        this._accelerations = accelerations;
+        this.calculateAccelerationIntervals();
     }
 }
 export default KinematicsObject;

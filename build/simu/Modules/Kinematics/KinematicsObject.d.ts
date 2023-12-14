@@ -34,8 +34,18 @@ declare class KinematicsObject extends SceneObject {
     /** Getters */
     get velocity(): Vector;
     get acceleration(): Vector;
+    get accelerations(): {
+        startAt: number;
+        duration: number;
+        vector: Vector;
+    }[];
     /** Setters */
     set initialVelocity(initialVelocity: Vector);
     get initialVelocity(): Vector;
+    set accelerations(accelerations: {
+        startAt: number;
+        duration: number;
+        vector: Vector;
+    }[]);
 }
 export default KinematicsObject;
